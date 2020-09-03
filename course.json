@@ -12,9 +12,7 @@
 		"limit":	"80",
 		"brief_introduction":	"This course is an introduction to Python at the university level. It adopts the teaching concept of understanding and applying computational ecology and is aimed at the zero-based Python learners. This course will help you learn the Python language quickly, easily and systematically, write programs efficiently, and master the basic methods and procedures for solving problems with computers.",
 		"textbook_info":	"< Python Language Programming Basis (2nd Edition)>",
-		"students":	[{
-				"name":	"guhao"
-			}],
+		"students":	[],
 		"faculty":	"International faculty"
 	}, {
 		"number":	"000002",
@@ -320,4 +318,5 @@
 		"textbook_info":	"none",
 		"students":	[],
 		"faculty":	"International faculty"
+	}]"International faculty"
 	}]

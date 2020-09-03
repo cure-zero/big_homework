@@ -549,6 +549,7 @@ void delete_course_student()
     puts("Please enter the class number");
     char num[100];
     memset(num,0,sizeof(num));
+    gets(num);
     deal_raw_string(num,sizeof(num));
     cJSON *i;
     cJSON_ArrayForEach(i,course)
@@ -559,7 +560,7 @@ void delete_course_student()
             int index = 0;
             cJSON_ArrayForEach(j,cJSON_GetArrayItem(i,13))
             {
-                if(!strcmp(j->child,Course_select_system->name))
+                if(!strcmp(cJSON_Print(j->child),Course_select_system->name))
                 {
                     break;
                 }
@@ -569,6 +570,7 @@ void delete_course_student()
             break;
         }
     }
+    puts("Success.");
 }
 void query_result(char* name)
 {
@@ -579,7 +581,7 @@ void query_result(char* name)
         cJSON *j;
         cJSON_ArrayForEach(j,cJSON_GetArrayItem(i,13))
         {
-            if(!strcmp(cJSON_Print(i->child),name))
+            if(!strcmp(cJSON_Print(j->child),name))
             {
                 printf("%s\t%s\n",cJSON_Print(cJSON_GetArrayItem(i,0)),cJSON_Print(cJSON_GetArrayItem(i,1)));
             }
