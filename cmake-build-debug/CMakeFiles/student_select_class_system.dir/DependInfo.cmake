@@ -4,6 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
+  "C:/Users/Cure_zero/CLionProjects/student_select_class_system/cJSON.c" "C:/Users/Cure_zero/CLionProjects/student_select_class_system/cmake-build-debug/CMakeFiles/student_select_class_system.dir/cJSON.c.obj"
   "C:/Users/Cure_zero/CLionProjects/student_select_class_system/course_select_system.c" "C:/Users/Cure_zero/CLionProjects/student_select_class_system/cmake-build-debug/CMakeFiles/student_select_class_system.dir/course_select_system.c.obj"
   "C:/Users/Cure_zero/CLionProjects/student_select_class_system/main.c" "C:/Users/Cure_zero/CLionProjects/student_select_class_system/cmake-build-debug/CMakeFiles/student_select_class_system.dir/main.c.obj"
   )

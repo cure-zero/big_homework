@@ -122,6 +122,33 @@ student_select_class_system/fast:
 	$(MAKE) -f CMakeFiles\student_select_class_system.dir\build.make CMakeFiles/student_select_class_system.dir/build
 .PHONY : student_select_class_system/fast
 
+cJSON.obj: cJSON.c.obj
+
+.PHONY : cJSON.obj
+
+# target to build an object file
+cJSON.c.obj:
+	$(MAKE) -f CMakeFiles\student_select_class_system.dir\build.make CMakeFiles/student_select_class_system.dir/cJSON.c.obj
+.PHONY : cJSON.c.obj
+
+cJSON.i: cJSON.c.i
+
+.PHONY : cJSON.i
+
+# target to preprocess a source file
+cJSON.c.i:
+	$(MAKE) -f CMakeFiles\student_select_class_system.dir\build.make CMakeFiles/student_select_class_system.dir/cJSON.c.i
+.PHONY : cJSON.c.i
+
+cJSON.s: cJSON.c.s
+
+.PHONY : cJSON.s
+
+# target to generate assembly for a file
+cJSON.c.s:
+	$(MAKE) -f CMakeFiles\student_select_class_system.dir\build.make CMakeFiles/student_select_class_system.dir/cJSON.c.s
+.PHONY : cJSON.c.s
+
 course_select_system.obj: course_select_system.c.obj
 
 .PHONY : course_select_system.obj
@@ -185,6 +212,9 @@ help:
 	@echo ... student_select_class_system
 	@echo ... edit_cache
 	@echo ... rebuild_cache
+	@echo ... cJSON.obj
+	@echo ... cJSON.i
+	@echo ... cJSON.s
 	@echo ... course_select_system.obj
 	@echo ... course_select_system.i
 	@echo ... course_select_system.s

@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/student_select_class_system.dir/cJSON.c.obj"
   "CMakeFiles/student_select_class_system.dir/course_select_system.c.obj"
   "CMakeFiles/student_select_class_system.dir/main.c.obj"
   "libstudent_select_class_system.dll.a"
