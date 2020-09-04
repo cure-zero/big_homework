@@ -86,9 +86,6 @@
 		<Unit filename="C:/Users/Cure_zero/CLionProjects/student_select_class_system/course_select_system.h">
 			<Option target="student_select_class_system"/>
 		</Unit>
-		<Unit filename="C:/Users/Cure_zero/CLionProjects/student_select_class_system/json.h">
-			<Option target="student_select_class_system"/>
-		</Unit>
 		<Unit filename="C:/Users/Cure_zero/CLionProjects/student_select_class_system/main.c">
 			<Option target="student_select_class_system"/>
 		</Unit>

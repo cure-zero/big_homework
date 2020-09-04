@@ -4,7 +4,6 @@
 #include "cJSON.h"
 #include<string.h>
 
-
 extern course_select_system*  Course_select_system;
 FILE *fp_teacher = NULL,*fp_student = NULL,*fp_course = NULL;
 char *content_teacher, *content_student, *content_course;
@@ -18,20 +17,6 @@ void init()
     Course_select_system = (course_select_system*)malloc(sizeof(course_select_system));
     Course_select_system->identity = 0;
     memset(Course_select_system->name,0,sizeof(Course_select_system->name));
-    Course_select_system->login = login;
-    Course_select_system->add_course=add_course;
-    Course_select_system->delete_course_student=delete_course_student;
-    Course_select_system->delete_course_teacher=delete_course_teacher;
-    Course_select_system->edit_course=edit_course;
-    Course_select_system->get_course_status=get_course_status;
-    Course_select_system->search_course=search_course;
-    Course_select_system->get_stat=get_stat;
-    Course_select_system->manage_info=manage_info;
-    Course_select_system->query_result=query_result;
-    Course_select_system->student_select_course=student_select_course;
-    Course_select_system->exit_system=exit_system;
-    Course_select_system->print_by_student_count = print_by_student_count;
-    Course_select_system->print_by_limit = print_by_limit;
 
     fp_teacher = fopen("../Teacher.json","rw+");
     fseek(fp_teacher,0,SEEK_END);
@@ -41,6 +26,7 @@ void init()
     fread(content_teacher,1,len_teacher,fp_teacher);
     teacher = cJSON_Parse(content_teacher);
     fseek(fp_teacher,0,SEEK_SET);
+
     fp_student = fopen("../Student.json","rw+");
     fseek(fp_student,0,SEEK_END);
     len_student=ftell(fp_student);
@@ -49,6 +35,7 @@ void init()
     fread(content_student,1,len_student,fp_student);
     student = cJSON_Parse(content_student);
     fseek(fp_student,0,SEEK_SET);
+
     fp_course = fopen("../course.json","rw+");
     fseek(fp_course,0,SEEK_END);
     len_course=ftell(fp_course);
@@ -57,6 +44,7 @@ void init()
     fread(content_course,1,len_course,fp_course);
     course = cJSON_Parse(content_course);
     fseek(fp_course,0,SEEK_SET);
+
     init_struct();
 }
 
@@ -84,30 +72,41 @@ void deal_raw_string(char* raw, int len_raw)
     strcpy(raw,a);
 }
 
-void login()
+int check_valid_input(int l, int r)
 {
-    char num[100];
-    char password[100];
-    char name[100];
+    int opt = 0;
+    while(1)
+    {
+        scanf("%d", &opt);
+        getchar();
+        if (opt > r || opt < l) {
+            puts("Invalid input!");
+            continue;
+        }
+        break;
+    }
+    return opt;
+}
+
+int login(char *password, char *num)
+{
     memset(num,0,sizeof(num));
     memset(password,0,sizeof(password));
-    memset(name,0,sizeof(name));
-    retry_flag:
 
     puts("Please enter your number and password");
     scanf("%s%s",num,password);getchar();
     deal_raw_string(num,sizeof(num));
     deal_raw_string(password,sizeof(password));
+
     cJSON *i=NULL;
     cJSON_ArrayForEach(i,teacher)
     {
         if(strcmp(cJSON_Print(cJSON_GetArrayItem(i,4)),password) == 0&&strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num) == 0)
         {
             Course_select_system->identity = 1;
-            strcpy(name,cJSON_Print(cJSON_GetArrayItem(i,2)));
-            strcpy(Course_select_system->name,name);
+            strcpy(Course_select_system->name,cJSON_Print(cJSON_GetArrayItem(i,2)));
             puts("Login Success. Your identity is teacher");
-            goto end_flag;
+            return 1;
         }
     }
     i=NULL;
@@ -115,20 +114,35 @@ void login()
     {
         if(strcmp(cJSON_Print(cJSON_GetArrayItem(i,6)),password) == 0&&strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num) == 0)
         {
-            Course_select_system->identity = 2;
-            strcpy(name,cJSON_Print(cJSON_GetArrayItem(i,3)));
-            strcpy(Course_select_system->name,name);
+            strcpy(Course_select_system->name,cJSON_Print(cJSON_GetArrayItem(i,3)));
             puts("Login Success. Your identity is student");
-            goto end_flag;
+            return 1;
         }
     }
-    end_flag:;
     if(Course_select_system->identity == 0)
     {
         puts("Login Failed. Please retry.");
-        goto retry_flag;
+        return 0;
     }
+}
+
+void menu()
+{
+    if(fp_course == NULL || fp_teacher == NULL || fp_student == NULL || course->type == cJSON_Invalid || teacher->type == cJSON_Invalid || student->type == cJSON_Invalid )
+    {
+        puts("The files are deleted or damaged. Please fix and rerun.");
+    }
+
+    char num[100];
+    char password[100];
+
+    while(1)
+    {
+        if(login(password,num))break;
+    }
+
     int cmd = 0 ;
+    int opt = 0;
 
     while(1)
     {
@@ -137,14 +151,59 @@ void login()
             puts("Press 1 to get info of courses, 2 to delete your courses, 3 to get statistics of your courses, 4 to query courses, 5 to add courses, 6 to edit courses, 7 to edit your profile.");
             puts("If you want to exit, press 0");
             scanf("%d", &cmd);getchar();
-            if(cmd == 0) { Course_select_system->exit_system(); break;}
-            else if(cmd == 1)Course_select_system->get_course_status();
-            else if(cmd == 2)Course_select_system->delete_course_teacher();
-            else if(cmd == 3)Course_select_system->get_stat();
-            else if(cmd == 4)Course_select_system->search_course();
-            else if(cmd == 5)Course_select_system->add_course();
-            else if(cmd == 6)Course_select_system->edit_course();
-            else if(cmd == 7)Course_select_system->manage_info();
+            if(cmd == 0) { exit_system(); break;}
+            else if(cmd == 1)get_course_status();
+            else if(cmd == 2)
+            {
+                while(1)
+                {
+                    if(!delete_course_teacher())break;
+                    puts("To retry please press 1, or press other if you want to back to menu");
+                    scanf("%d",&opt);
+                    if(opt != 1)break;
+                }
+            }
+            else if(cmd == 3)get_stat();
+            else if(cmd == 4)
+            {
+                while(1)
+                {
+                    if(!search_course())break;
+                    puts("To retry please press 1, or press other if you want to back to menu");
+                    scanf("%d",&opt);
+                    if(opt != 1)break;
+                }
+            }
+            else if(cmd == 5)
+            {
+                while(1)
+                {
+                    if(!add_course())break;
+                    puts("To retry please press 1, or press other if you want to back to menu");
+                    scanf("%d",&opt);
+                    if(opt != 1)break;
+                }
+            }
+            else if(cmd == 6)
+            {
+                while(1)
+                {
+                    if(!edit_course())break;
+                    puts("To retry please press 1, or press other if you want to back to menu");
+                    scanf("%d",&opt);
+                    if(opt != 1)break;
+                }
+            }
+            else if(cmd == 7)
+            {
+                while(1)
+                {
+                    if(!manage_info())break;
+                    puts("To retry please press 1, or press other if you want to back to menu");
+                    scanf("%d",&opt);
+                    if(opt != 1)break;
+                }
+            }
             else puts("Invalid input. Please retry.");
         }
         if(Course_select_system->identity == 2)
@@ -152,24 +211,62 @@ void login()
             puts("Press 1 to select courses, 2 to search courses, 3 to query results, 4 to delete courses, and 5 to edit profile.");
             puts("If you want to exit, press 0");
             scanf("%d", &cmd);getchar();
-            if(cmd == 0) { Course_select_system->exit_system(); break;}
-            else if(cmd == 1)Course_select_system->student_select_course();
-            else if(cmd == 2)Course_select_system->search_course();
-            else if(cmd == 3)Course_select_system->query_result(Course_select_system->name);
-            else if(cmd == 4)Course_select_system->delete_course_student();
-            else if(cmd == 5)Course_select_system->manage_info();
+            if(cmd == 0) { exit_system(); break;}
+            else if(cmd == 1)
+            {
+                while(1)
+                {
+                    if(!student_select_course())break;
+                    puts("To retry please press 1, or press other if you want to back to menu");
+                    scanf("%d",&opt);
+                    if(opt != 1)break;
+                }
+            }
+            else if(cmd == 2)
+            {
+                while(1)
+                {
+                    if(!search_course())break;
+                    puts("To retry please press 1, or press other if you want to back to menu");
+                    scanf("%d",&opt);
+                    if(opt != 1)break;
+                }
+            }
+            else if(cmd == 3)query_result(Course_select_system->name);
+            else if(cmd == 4)
+            {
+                while(1)
+                {
+                    if(!delete_course_student())break;
+                    puts("To retry please press 1, or press other if you want to back to menu");
+                    scanf("%d",&opt);
+                    if(opt != 1)break;
+                }
+            }
+            else if(cmd == 5)
+            {
+                while(1)
+                {
+                    if(!manage_info())break;
+                    puts("To retry please press 1, or press other if you want to back to menu");
+                    scanf("%d",&opt);
+                    if(opt != 1)break;
+                }
+            }
             else puts("Invalid input. Please retry.");
         }
     }
 }
 
-void add_course()
+int add_course()
 {
     cJSON *new_course = cJSON_CreateObject();
-    puts("Please input number");
     int course_time_int = 0;
+    int course_count = 0;
+    int opened_course = 0;
     char num[100],name[100],credit[100],hours[100],course_type[100],teacher_name[100],begin_time[100],end_time[100],course_time[100],limit[100],brief[100],info[100];
-    gets(num);
+
+    puts("Please input number");gets(num);
     puts("Please input name");gets(name);
     puts("Please input credit");gets(credit);
     puts("Please input hours");gets(hours);
@@ -207,25 +304,21 @@ void add_course()
     deal_raw_string(limit,sizeof(limit));
     deal_raw_string(brief,sizeof(brief));
     deal_raw_string(info,sizeof(info));
+
     course_time_int=parse_time(course_time);
 
-    int flag = 0;
-    int course_count = 0;
-    int opened_course = 0;
     cJSON *i = NULL;
     cJSON_ArrayForEach(i,course)
     {
         if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num))
         {
             puts("Course number already exists!");
-            flag = 1;
-            goto goto_flag;
+            return 0;
         }
         if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,1)),name))
         {
             puts("Course name already exists!");
-            flag = 2;
-            goto goto_flag;
+            return 0;
         }
         if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,5)),teacher_name))
         {
@@ -234,21 +327,18 @@ void add_course()
             if((opened_course&course_time_int) != 0)
             {
                 puts("Conflict courses!");
-                flag = 4;
-                goto goto_flag;
+                return 0;
             }
             if(course_count >= 2)
             {
                 puts("Too much courses!");
-                flag = 3;
-                goto goto_flag;
+                return 0;
             }
         }
     }
     cJSON_AddItemToArray(course,new_course);
-    puts("Add success");
-
-    goto_flag:;
+    puts("Success.");
+    return 1;
 }
 
 int parse_time(char* time_raw)
@@ -299,7 +389,7 @@ int parse_time(char* time_raw)
         return 0b0000000001;
 }
 
-void delete_course_teacher()
+int delete_course_teacher()
 {
     puts("Please enter the number of the course.");
     char num[100];
@@ -315,27 +405,26 @@ void delete_course_teacher()
             if(strcmp(cJSON_Print(cJSON_GetArrayItem(i,5)),Course_select_system->name) != 0)
             {
                 puts("Not your class. Permission Denied.");
-                goto goto_flag;
+                return 0;
             }
             if(cJSON_GetArraySize(cJSON_GetArrayItem(i,13)) != 0)
             {
                 puts("The course has already been selected by students. Permission Denied.");
-                goto goto_flag;
+                return 0;
             }
             puts("Success.");
             cJSON_DeleteItemFromArray(course,index);
-            break;
+            return 1;
         }
         index++;
     }
-
-    goto_flag:;
+    puts("Number not found!");
+    return 0;
 }
 
-void manage_info()
+int manage_info()
 {
     char target_string[100];
-    back_flag:;
     memset(target_string,0,sizeof(target_string));
     cJSON *i;
     if(Course_select_system->identity == 1)
@@ -345,27 +434,23 @@ void manage_info()
         {
             invalid_flag_teacher:;
             puts("What do you want to edit?");
-            puts("press 1 to edit email address and 2 to edit password");
-            int opt = 0;
-            scanf("%d",&opt);getchar();
-            if(opt > 2 || opt < 1)
-            {
-                puts("Invalid input!");
-                goto invalid_flag_teacher;
-            }
+            puts("press 1 to edit email address and 2 to edit password.");
+            int opt = check_valid_input(1,2);
             if(opt == 1)
             {
-                puts("Please enter new address");
+                puts("Please enter new email address.");
                 scanf("%s",target_string);getchar();
                 cJSON_SetValuestring(cJSON_GetArrayItem(i,3),target_string);
-                goto success_flag;
+                puts("Success.");
+                return 1;
             }
             else if(opt == 2)
             {
-                puts("Please enter new password");
+                puts("Please enter new password.");
                 scanf("%s",target_string);getchar();
                 cJSON_SetValuestring(cJSON_GetArrayItem(i,4),target_string);
-                goto success_flag;
+                puts("Success.");
+                return 1;
             }
         }
     }
@@ -376,52 +461,46 @@ void manage_info()
         {
             invalid_flag_student:;
             puts("What do you want to edit?");
-            puts("press 1 to edit email address, 2 to edit password and 3 to edit phone number");
-            int opt = 0;
-            scanf("%d",&opt);getchar();
-            if(opt > 3 || opt < 1)
-            {
-                puts("Invalid input!");
-                goto invalid_flag_student;
-            }
+            puts("press 1 to edit email address, 2 to edit password and 3 to edit phone number.");
+            int opt = check_valid_input(1,3);
             if(opt == 1)
             {
-                puts("Please enter new address");
+                puts("Please enter new address.");
                 scanf("%s",target_string);getchar();
                 cJSON_SetValuestring(cJSON_GetArrayItem(i,7),target_string);
-                goto success_flag;
+                puts("Success.");
+                return 1;
             }
             else if(opt == 2)
             {
-                puts("Please enter new password");
+                puts("Please enter new password.");
                 scanf("%s",target_string);getchar();
                 cJSON_SetValuestring(cJSON_GetArrayItem(i,6),target_string);
-                goto success_flag;
+                puts("Success.");
+                return 1;
             }
             else if(opt == 3)
             {
                 puts("Please enter new phone number");
                 gets(target_string);
                 cJSON_SetValuestring(cJSON_GetArrayItem(i,5),target_string);
-                goto success_flag;
+                puts("Success.");
+                return 1;
             }
         }
     }
-    goto back_flag;
-    puts("Success.");
-    success_flag:;
 }
 
-void edit_course()
+int edit_course()
 {
     puts("Please enter the number of the course.");
+
     char num[100];
     memset(num,0,sizeof(num));
     gets(num);
     deal_raw_string(num,sizeof(num));
+
     cJSON *i = NULL;
-    int index = 0;
-    int mod = 0;
     cJSON_ArrayForEach(i,course)
     {
         if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num))
@@ -429,22 +508,16 @@ void edit_course()
             back_flag:;
             puts("What do you want to edit?");
             puts("press 1 to edit textbook, 2 to edit info 3 to edit limit");
-            int opt = 0;
-            scanf("%d",&opt);getchar();
-            if(opt > 3 || opt < 1)
-            {
-                puts("Invalid Input!");
-                goto back_flag;
-            }
+            int opt = check_valid_input(1,3);
             if(strcmp(cJSON_Print(cJSON_GetArrayItem(i,5)),Course_select_system->name) != 0)
             {
                 puts("Not your class. Permission Denied.");
-                goto goto_flag;
+                return 0;
             }
             if(cJSON_GetArraySize(cJSON_GetArrayItem(i,13)) != 0 && opt != 3)
             {
                 puts("The course has already been selected by students. Permission Denied.");
-                goto goto_flag;
+                return 0;
             }
             char target_string[100];
             if(opt == 1)
@@ -466,35 +539,33 @@ void edit_course()
                 cJSON_SetValuestring(cJSON_GetArrayItem(i,10),target_string);
             }
             puts("Success.");
-
-            break;
+            return 1;
         }
-        index++;
     }
-
-    goto_flag:;
+    puts("Class not Found!");
+    return 0;
 }
 
-void student_select_course()
+int student_select_course()
 {
     char num[100];
-    char parsed_name[100];
-    memset(parsed_name,0,sizeof(parsed_name));
-    deparse(Course_select_system->name,parsed_name);
-
     cJSON *i;
     int select_count = 0;
     int course_times[100];
-    cJSON *new_student = cJSON_CreateObject();
-    cJSON_AddStringToObject(new_student,"name",parsed_name);
-
-    retry_flag:;
-    puts("Please enter the class number");
+    char parsed_name[100];
 
     memset(num,0,sizeof(num));
     memset(course_times,0,sizeof(course_times));
+    memset(parsed_name,0,sizeof(parsed_name));
+    deparse(Course_select_system->name,parsed_name);
     gets(num);
     deal_raw_string(num,sizeof(num));
+
+    cJSON *new_student = cJSON_CreateObject();
+    cJSON_AddStringToObject(new_student,"name",parsed_name);
+
+    puts("Please enter the class number");
+
     cJSON_ArrayForEach(i,course)
     {
         cJSON *j;
@@ -506,7 +577,7 @@ void student_select_course()
                 if(select_count >= 3)
                 {
                     puts("You have selected enough courses. Permission denied.");
-                    goto retry_flag;
+                    return 0;
                 }
                 course_times[select_count] = parse_time(cJSON_Print(cJSON_GetArrayItem(i,8)));
             }
@@ -521,7 +592,7 @@ void student_select_course()
                 if((course_times[1]&parse_time(cJSON_Print(cJSON_GetArrayItem(i,8)))) != 0)
                 {
                     puts("Conflict courses. Please retry.");
-                    goto retry_flag;
+                    return 0;
                 }
             }
             if(strlen(course_times) == 2)
@@ -529,28 +600,32 @@ void student_select_course()
                 if((course_times[1]&parse_time(cJSON_Print(cJSON_GetArrayItem(i,8)))) != 0 || (course_times[2]&parse_time(cJSON_Print(cJSON_GetArrayItem(i,8)))) != 0)
                 {
                     puts("Conflict courses. Please retry.");
-                    goto retry_flag;
+                    return 0;
                 }
             }
             if(parse_string(cJSON_Print(cJSON_GetArrayItem(i,10))) == cJSON_GetArraySize(cJSON_GetArrayItem(i,13)))
             {
                 puts("The course is closed. Please retry.");
-                goto retry_flag;
+                return 0;
             }
             cJSON_AddItemToArray(cJSON_GetArrayItem(i,13),new_student);
             puts("Success.");
-            break;
+            return 1;
         }
     }
+    puts("Course not found. Please retry.");
+    return 0;
 }
 
-void delete_course_student()
+int delete_course_student()
 {
     puts("Please enter the class number");
+
     char num[100];
     memset(num,0,sizeof(num));
     gets(num);
     deal_raw_string(num,sizeof(num));
+
     cJSON *i;
     cJSON_ArrayForEach(i,course)
     {
@@ -562,15 +637,18 @@ void delete_course_student()
             {
                 if(!strcmp(cJSON_Print(j->child),Course_select_system->name))
                 {
-                    break;
+                    cJSON_DeleteItemFromArray(cJSON_GetArrayItem(i,13),index);
+                    puts("Success.");
+                    return 1;
                 }
                 index++;
             }
-            cJSON_DeleteItemFromArray(cJSON_GetArrayItem(i,13),index);
-            break;
+            puts("Thie is not your course. Please retry.");
+            return 0;
         }
     }
-    puts("Success.");
+    puts("Course not found. Please retry.");
+
 }
 void query_result(char* name)
 {
@@ -590,23 +668,13 @@ void query_result(char* name)
 }
 void get_course_status()
 {
-
-    int opt = 0;
     cJSON *i;
     char name[100];
     memset(name,0,sizeof(name));
-    invalid_flag:;
-
 
     puts("Press 1 to get the info of your courses, 2 to search courses of a student, and 3 to search the students info of a course.");
-    scanf("%d",&opt);getchar();
 
-
-    if(opt > 3 || opt < 1)
-    {
-        puts("Invalid input!");
-        goto invalid_flag;
-    }
+    int opt = check_valid_input(1,3);
     if(opt == 1)
     {
         puts("Course Lists:\n");
@@ -640,21 +708,14 @@ void get_course_status()
         }
     }
 }
-void search_course()
+int search_course()
 {
-    int opt = 0 ;
     char name[100];
     memset(name,0,sizeof(name));
     cJSON *i;
 
-    retry_flag:;
-    puts("\nPress 1 to search by course, or press 2 to search by faculty.");
-    scanf("%d",&opt);getchar();
-    if(opt > 2 || opt < 1)
-    {
-        puts("Invalid input. Please retry");
-        goto retry_flag;
-    }
+    puts("Press 1 to search by course, or press 2 to search by faculty.");
+    int opt = check_valid_input(1,2);
     if(opt == 1)
     {
         puts("Please enter course name.");
@@ -664,6 +725,7 @@ void search_course()
         {
             if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,1)),name))
             {
+                puts("Success");
                 cJSON *j;
                 cJSON_ArrayForEach(j,i)
                 {
@@ -672,30 +734,26 @@ void search_course()
                         printf("%s:%s\n",j->string,cJSON_Print(j));
                     }
                 }
-                break;
+                puts("\nTo get more info, please search by name");
+                return 1;
             }
         }
+        puts("Course not found. Please retry.");
+        return 0;
     }
     else if(opt == 2)
     {
         puts("Please enter faculty name.");
         gets(name);
         deal_raw_string(name,sizeof(name));
-        retry_flag_1:;
-        puts("Press 1 to sort by limit or press 2 to sort by student counts");
-        int opt = 0;
-        scanf("%d",&opt);getchar();
-        if(opt == 1)
-        print_by_limit(name,"faculty");
-        else if(opt == 2)
-            print_by_student_count(name,"faculty");
-        else
-        {
-            puts("Invalid input. Please retry");
-            goto retry_flag_1;
-        }
 
-        puts("\nTo get more info, please search by name");
+        puts("Press 1 to sort by limit or press 2 to sort by student counts");
+
+        int opt_1 = check_valid_input(1,2);
+        if(opt_1 == 1)
+            print_by_limit(name,"faculty");
+        else if(opt_1 == 2)
+            print_by_student_count(name,"faculty");
     }
 }
 int parse_string(char *string)
@@ -763,7 +821,6 @@ void get_stat()
 void init_struct()
 {
     courses = (Course*)calloc(cJSON_GetArraySize(course),sizeof(Course));
-  //  printf("%d\n",cJSON_GetArraySize(course));
     cJSON *i;
 
     cJSON_ArrayForEach(i,course)
@@ -774,6 +831,7 @@ void init_struct()
         courses_size++;
     }
 }
+
 int cmp(const void *a, const void *b)
 {
     return ((Course*)a)->student_count - ((Course*)b)->student_count;
