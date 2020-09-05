@@ -127,6 +127,15 @@ int login(char *password, char *num)
     }
 }
 
+void add_side()
+{
+    int i;
+    for (i = 1; i < 50; i++)
+    {
+        printf("*");
+    }
+    printf("\n");
+}
 void menu()
 {
     if(fp_course == NULL || fp_teacher == NULL || fp_student == NULL || course->type == cJSON_Invalid || teacher->type == cJSON_Invalid || student->type == cJSON_Invalid )
@@ -142,15 +151,24 @@ void menu()
         if(login(password,num))break;
     }
 
-    int cmd = 0 ;
+    int cmd = 0;
     int opt = 0;
 
     while(1)
     {
         if(Course_select_system->identity == 1)
         {
-            puts("Press 1 to get info of courses, 2 to delete your courses, 3 to get statistics of your courses, 4 to query courses, 5 to add courses, 6 to edit courses, 7 to edit your profile.");
-            puts("If you want to exit, press 0");
+            add_side();
+            puts("Teacher's functions");
+            puts("(1) Get info of courses.");
+            puts("(2) Delete your courses.");
+            puts("(3) Get statistics of your courses.");
+            puts("(4) Query courses.");
+            puts("(5) Add courses.");
+            puts("(6) Edit courses.");
+            puts("(7) Edit your profile.");
+            puts("If you want to exit, press 0.");
+            add_side();
             scanf("%d", &cmd);getchar();
             if(cmd == 0) { exit_system(); break;}
             else if(cmd == 1)get_course_status();
@@ -209,8 +227,15 @@ void menu()
         }
         if(Course_select_system->identity == 2)
         {
-            puts("Press 1 to select courses, 2 to search courses, 3 to query results, 4 to delete courses, and 5 to edit profile.");
-            puts("If you want to exit, press 0");
+            add_side();
+            puts("Student's functions");
+            puts( "(1) Select courses.");
+            puts( "(2) Search courses. ");
+            puts( "(3) Query results. ");
+            puts( "(4) Delete courses.");
+            puts( "(5) Edit profile.");
+            puts("If you want to exit, press 0.");
+            add_side();
             scanf("%d", &cmd);getchar();
             if(cmd == 0) { exit_system(); break;}
             else if(cmd == 1)
@@ -434,8 +459,11 @@ int manage_info()
         if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,2)),Course_select_system->name))
         {
             invalid_flag_teacher:;
+            add_side();
             puts("What do you want to edit?");
-            puts("press 1 to edit email address and 2 to edit password.");
+            puts("(1) Edit email address.");
+            puts("(2) Edit password.");
+            add_side();
             int opt = check_valid_input(1,2);
             if(opt == 1)
             {
@@ -461,8 +489,12 @@ int manage_info()
         if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,3)),Course_select_system->name))
         {
             invalid_flag_student:;
+            add_side();
             puts("What do you want to edit?");
-            puts("press 1 to edit email address, 2 to edit password and 3 to edit phone number.");
+            puts("(1) Edit email address.");
+            puts("(2) Edit password.");
+            puts("(3) Edit phone number.");
+            add_side();
             int opt = check_valid_input(1,3);
             if(opt == 1)
             {
@@ -507,8 +539,11 @@ int edit_course()
         if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num))
         {
             back_flag:;
+            add_side();
             puts("What do you want to edit?");
-            puts("press 1 to edit textbook, 2 to edit info 3 to edit limit");
+            puts("(1) Edit textbook.");
+            puts("(2) Edit info 3 to edit limit.");
+            add_side();
             int opt = check_valid_input(1,3);
             if(strcmp(cJSON_Print(cJSON_GetArrayItem(i,5)),Course_select_system->name) != 0)
             {
@@ -559,8 +594,7 @@ int student_select_course()
     memset(course_times,0,sizeof(course_times));
     memset(parsed_name,0,sizeof(parsed_name));
     deparse(Course_select_system->name,parsed_name);
-
-
+  
     cJSON *new_student = cJSON_CreateObject();
     cJSON_AddStringToObject(new_student,"name",parsed_name);
 
@@ -673,9 +707,11 @@ void get_course_status()
     cJSON *i;
     char name[100];
     memset(name,0,sizeof(name));
-
-    puts("Press 1 to get the info of your courses, 2 to search courses of a student, and 3 to search the students info of a course.");
-
+    add_side();
+    puts("(1) Get the info of your courses.");
+    puts("(2) Search courses of a student.");
+    puts("(3) Search the students info of a course.");
+    add_side();
     int opt = check_valid_input(1,3);
     if(opt == 1)
     {
@@ -715,8 +751,11 @@ int search_course()
     char name[100];
     memset(name,0,sizeof(name));
     cJSON *i;
-
-    puts("Press 1 to search by course, or press 2 to search by faculty.");
+    add_side();
+    puts("Search way");
+    puts("(1) Search by course.");
+    puts("(2) Search by faculty.");
+    add_side();
     int opt = check_valid_input(1,2);
     if(opt == 1)
     {
@@ -748,9 +787,11 @@ int search_course()
         puts("Please enter faculty name.");
         gets(name);
         deal_raw_string(name,sizeof(name));
-
-        puts("Press 1 to sort by limit or press 2 to sort by student counts");
-
+        add_side();
+        puts("Sort way");
+        puts("(1) Sort by limit.");
+        puts("(2) Sort by student counts");
+        add_side();
         int opt_1 = check_valid_input(1,2);
         if(opt_1 == 1)
             print_by_limit(name,"faculty");
@@ -761,6 +802,7 @@ int search_course()
 int parse_string(char *string)
 {
     char new_string [100];
+
     for(int i = 0; i < strlen(string) - 2; i++)
     {
         new_string[i] = string[i+1];
