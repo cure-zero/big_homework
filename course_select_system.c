@@ -158,7 +158,7 @@ void menu()
             {
                 while(1)
                 {
-                    if(!delete_course_teacher())break;
+                    if(delete_course_teacher())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
                     scanf("%d",&opt);
                     if(opt != 1)break;
@@ -169,7 +169,7 @@ void menu()
             {
                 while(1)
                 {
-                    if(!search_course())break;
+                    if(search_course())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
                     scanf("%d",&opt);
                     if(opt != 1)break;
@@ -179,7 +179,7 @@ void menu()
             {
                 while(1)
                 {
-                    if(!add_course())break;
+                    if(add_course())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
                     scanf("%d",&opt);
                     if(opt != 1)break;
@@ -189,7 +189,7 @@ void menu()
             {
                 while(1)
                 {
-                    if(!edit_course())break;
+                    if(edit_course())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
                     scanf("%d",&opt);
                     if(opt != 1)break;
@@ -199,7 +199,7 @@ void menu()
             {
                 while(1)
                 {
-                    if(!manage_info())break;
+                    if(manage_info())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
                     scanf("%d",&opt);
                     if(opt != 1)break;
@@ -217,7 +217,7 @@ void menu()
             {
                 while(1)
                 {
-                    if(!student_select_course())break;
+                    if(student_select_course())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
                     scanf("%d",&opt);
                     if(opt != 1)break;
@@ -227,7 +227,7 @@ void menu()
             {
                 while(1)
                 {
-                    if(!search_course())break;
+                    if(search_course())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
                     scanf("%d",&opt);
                     if(opt != 1)break;
@@ -238,7 +238,7 @@ void menu()
             {
                 while(1)
                 {
-                    if(!delete_course_student())break;
+                    if(delete_course_student())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
                     scanf("%d",&opt);
                     if(opt != 1)break;
@@ -248,7 +248,7 @@ void menu()
             {
                 while(1)
                 {
-                    if(!manage_info())break;
+                    if(manage_info())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
                     scanf("%d",&opt);
                     if(opt != 1)break;
@@ -559,13 +559,14 @@ int student_select_course()
     memset(course_times,0,sizeof(course_times));
     memset(parsed_name,0,sizeof(parsed_name));
     deparse(Course_select_system->name,parsed_name);
-    gets(num);
-    deal_raw_string(num,sizeof(num));
+
 
     cJSON *new_student = cJSON_CreateObject();
     cJSON_AddStringToObject(new_student,"name",parsed_name);
 
     puts("Please enter the class number");
+    gets(num);
+    deal_raw_string(num,sizeof(num));
 
     cJSON_ArrayForEach(i,course)
     {
