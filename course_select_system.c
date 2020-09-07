@@ -189,7 +189,7 @@ void menu()
                 {
                     if(delete_course_teacher())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
-                    scanf("%d",&opt);
+                    scanf("%d",&opt);getchar();
                     if(opt != 1)break;
                 }
             }
@@ -200,7 +200,7 @@ void menu()
                 {
                     if(search_course())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
-                    scanf("%d",&opt);
+                    scanf("%d",&opt);getchar();
                     if(opt != 1)break;
                 }
             }
@@ -210,7 +210,7 @@ void menu()
                 {
                     if(add_course())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
-                    scanf("%d",&opt);
+                    scanf("%d",&opt);getchar();
                     if(opt != 1)break;
                 }
             }
@@ -220,7 +220,7 @@ void menu()
                 {
                     if(edit_course())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
-                    scanf("%d",&opt);
+                    scanf("%d",&opt);getchar();
                     if(opt != 1)break;
                 }
             }
@@ -230,7 +230,7 @@ void menu()
                 {
                     if(manage_info())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
-                    scanf("%d",&opt);
+                    scanf("%d",&opt);getchar();
                     if(opt != 1)break;
                 }
             }
@@ -255,7 +255,7 @@ void menu()
                 {
                     if(student_select_course())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
-                    scanf("%d",&opt);
+                    scanf("%d",&opt);getchar();
                     if(opt != 1)break;
                 }
             }
@@ -265,7 +265,7 @@ void menu()
                 {
                     if(search_course())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
-                    scanf("%d",&opt);
+                    scanf("%d",&opt);getchar();
                     if(opt != 1)break;
                 }
             }
@@ -276,7 +276,7 @@ void menu()
                 {
                     if(delete_course_student())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
-                    scanf("%d",&opt);
+                    scanf("%d",&opt);getchar();
                     if(opt != 1)break;
                 }
             }
@@ -286,7 +286,7 @@ void menu()
                 {
                     if(manage_info())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
-                    scanf("%d",&opt);
+                    scanf("%d",&opt);getchar();
                     if(opt != 1)break;
                 }
             }
