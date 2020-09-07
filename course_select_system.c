@@ -60,25 +60,25 @@ void exit_system()
 }
 
 void deal_raw_string(char* raw, int len_raw)
-//½«ÊäÈë×Ö·û´®¼ÓÉÏË«ÒıºÅ
+//å°†è¾“å…¥å­—ç¬¦ä¸²åŠ ä¸ŠåŒå¼•å·
 {
     char a[100];
     int len=strlen(a);
     memset(a, 0, len);
-    //Çå¿ÕÊı×éa
+    //æ¸…ç©ºæ•°ç»„a
     a[0]=(char)34;
-    //¸øaÊ×ÔªËØ¸³ÖµÎªË«ÒıºÅ
+    //ç»™aé¦–å…ƒç´ èµ‹å€¼ä¸ºåŒå¼•å·
     strcat(a,raw);
-    //Æ´½ÓÊı×éaºÍÊı×éraw
+    //æ‹¼æ¥æ•°ç»„aå’Œæ•°ç»„raw
     memset(raw,0,len_raw);
-    //Çå¿ÕÊı×éraw
+    //æ¸…ç©ºæ•°ç»„raw
     raw[0]=(char)34;
-    //¸øaÊ×ÔªËØ¸³ÖµÎªË«ÒıºÅ
+    //ç»™aé¦–å…ƒç´ èµ‹å€¼ä¸ºåŒå¼•å·
     strcat(a,raw);
     strcpy(raw,a);
 }
 
-int check_valid_input(int l, int r)//Ğ£ÑéÊäÈë£¬Èç¹ûÊäÈë²»ºÏ·¨£¬ÖØ¸´»ñÈ¡Ö±µ½ºÏ·¨ÎªÖ¹
+int check_valid_input(int l, int r)//æ ¡éªŒè¾“å…¥ï¼Œå¦‚æœè¾“å…¥ä¸åˆæ³•ï¼Œé‡å¤è·å–ç›´åˆ°åˆæ³•ä¸ºæ­¢
 {
     int opt = 0;
     while(1)
@@ -103,16 +103,16 @@ int login(char *password, char *num)
     scanf("%s%s",num,password);getchar();
     deal_raw_string(num,sizeof(num));
     deal_raw_string(password,sizeof(password));
-    //¸ønumºÍpassword¼ÓË«ÒıºÅ
+    //ç»™numå’ŒpasswordåŠ åŒå¼•å·
     cJSON *i=NULL;
-    //¶¨ÒåcJSONÑ­»·±äÁ¿i
-    cJSON_ArrayForEach(i,teacher)//±éÀúteacherÎÄ¼ş
+    //å®šä¹‰cJSONå¾ªç¯å˜é‡i
+    cJSON_ArrayForEach(i,teacher)//éå†teacheræ–‡ä»¶
     {
-        //±È½ÏÊäÈëµÄÕËºÅÃÜÂëÊÇ·ñÔÚteacherÊı¾İ¿âÖĞ
+        //æ¯”è¾ƒè¾“å…¥çš„è´¦å·å¯†ç æ˜¯å¦åœ¨teacheræ•°æ®åº“ä¸­
         if(strcmp(cJSON_Print(cJSON_GetArrayItem(i,4)),password) == 0&&strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num) == 0)
         {
             Course_select_system->identity = 1;
-            //½«Éí·İÉèÖÃÎªÀÏÊ¦
+            //å°†èº«ä»½è®¾ç½®ä¸ºè€å¸ˆ
             strcpy(Course_select_system->name,cJSON_Print(cJSON_GetArrayItem(i,2)));
             puts("Login Success. Your identity is teacher");
             return 1;
@@ -121,11 +121,11 @@ int login(char *password, char *num)
     i=NULL;
     cJSON_ArrayForEach(i,student)
     {
-        //±È½ÏÊäÈëµÄÕËºÅÃÜÂëÊÇ·ñÔÚteacherÊı¾İ¿âÖĞ
+        //æ¯”è¾ƒè¾“å…¥çš„è´¦å·å¯†ç æ˜¯å¦åœ¨teacheræ•°æ®åº“ä¸­
         if(strcmp(cJSON_Print(cJSON_GetArrayItem(i,6)),password) == 0&&strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num) == 0)
         {
             Course_select_system->identity = 2;
-            //½«Éí·İÉèÖÃÎªÑ§Éú
+            //å°†èº«ä»½è®¾ç½®ä¸ºå­¦ç”Ÿ
             strcpy(Course_select_system->name,cJSON_Print(cJSON_GetArrayItem(i,3)));
             puts("Login Success. Your identity is student");
             return 1;
@@ -295,7 +295,7 @@ void menu()
     }
 }
 
-int add_course()
+int add_course()//å¢åŠ è¯¾ç¨‹
 {
     cJSON *new_course = cJSON_CreateObject();
     int course_time_int = 0;
@@ -315,7 +315,7 @@ int add_course()
     puts("Please input limit");gets(limit);
     puts("Please input brief introdution");gets(brief);
     puts("Please input textbook");gets(info);
-
+//è¾“å…¥è¯¾ç¨‹å±æ€§
     cJSON_AddItemToObject(new_course, "num", cJSON_CreateString(num));
     cJSON_AddItemToObject(new_course, "name", cJSON_CreateString(name));
     cJSON_AddItemToObject(new_course, "credit", cJSON_CreateString(credit));
@@ -328,7 +328,7 @@ int add_course()
     cJSON_AddItemToObject(new_course, "limit", cJSON_CreateString(limit));
     cJSON_AddItemToObject(new_course, "brief", cJSON_CreateString(brief));
     cJSON_AddItemToObject(new_course, "info", cJSON_CreateString(info));
-
+//æŠŠä»¥ä¸Šå±æ€§å¢åŠ åˆ°æ–°çš„è¯¾ç¨‹é‡Œ
     deal_raw_string(num,sizeof(num));
     deal_raw_string(name,sizeof(name));
     deal_raw_string(credit,sizeof(credit));
@@ -341,13 +341,13 @@ int add_course()
     deal_raw_string(limit,sizeof(limit));
     deal_raw_string(brief,sizeof(brief));
     deal_raw_string(info,sizeof(info));
-
+//å¯¹ä»¥ä¸Šæ•°æ®è¿›è¡Œå­—ç¬¦ä¸²çš„æ ¼å¼åŒ–å¤„ç†
     course_time_int=parse_time(course_time);
 
-    cJSON *i = NULL;
-    cJSON_ArrayForEach(i,course)
+    cJSON *i = NULL;//å®šä¹‰cJSONå¾ªç¯å˜é‡i
+    cJSON_ArrayForEach(i,course)//éå†courseæ–‡ä»¶
     {
-        if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num))
+        if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num))//æ‰¾åˆ°ç»“æ„ä½“é‡Œçš„ç¬¬0é¡¹ï¼Œè½¬æ¢ä¸ºå­—ç¬¦ä¸²æ ¼å¼ï¼Œå¹¶æ¯”è¾ƒä¸¤ä¸ªå­—ç¬¦ä¸²æ˜¯å¦ç›¸ç­‰
         {
             puts("Course number already exists!");
             return 0;
@@ -380,7 +380,7 @@ int add_course()
 
 int parse_time(char* time_raw)
 {
-    if(!strcmp(time_raw,"\"8:00-8:50\""))
+    if(!strcmp(time_raw,"\"8:00-8:50\""))//æ¯”è¾ƒä¸Šè¯¾æ—¶é—´æ˜¯å¦å’Œæ­¤æ—¶é—´æ®µä¸€è‡´
         return 0b1000000000;
     if(!strcmp(time_raw,"\"8:00-9:50\""))
         return 0b1100000000;
@@ -425,7 +425,7 @@ int parse_time(char* time_raw)
     if(!strcmp(time_raw,"\"19:30-20:20\""))
         return 0b0000000001;
 }
-
+//ç”¨ä¸åŒçš„äºŒè¿›åˆ¶æ•°è¡¨ç¤ºä¸åŒä¸Šè¯¾æ—¶é—´çš„è¯¾ç¨‹
 int delete_course_teacher()
 {
     puts("Please enter the number of the course.");
@@ -601,17 +601,17 @@ int student_select_course()
     int course_times[100];
     char parsed_name[100];
 
-    memset(num,0,sizeof(num));//³õÊ¼»¯±äÁ¿
+    memset(num,0,sizeof(num));//åˆå§‹åŒ–å˜é‡
     memset(course_times,0,sizeof(course_times));
     memset(parsed_name,0,sizeof(parsed_name));
-    deparse(Course_select_system->name,parsed_name);//½«Êä³öµÄnameÈ¥ÒıºÅºó¸½Öµ¸ø±äÁ¿parsed_name
+    deparse(Course_select_system->name,parsed_name);//å°†è¾“å‡ºçš„nameå»å¼•å·åé™„å€¼ç»™å˜é‡parsed_name
   
     cJSON *new_student = cJSON_CreateObject();
-    cJSON_AddStringToObject(new_student,"name",parsed_name);//ÔÚnew_student¶ÔÏóÖĞÌí¼ÓnameÊôĞÔ
+    cJSON_AddStringToObject(new_student,"name",parsed_name);//åœ¨new_studentå¯¹è±¡ä¸­æ·»åŠ nameå±æ€§
 
     puts("Please enter the class number");
     gets(num);
-    deal_raw_string(num,sizeof(num));//¸øÊäÈëµÄnum¼ÓÒıºÅÊ¹ÆäÓëÎÄ¼şÖĞµÄÊı¾İ¸ñÊ½Ò»ÖÂ
+    deal_raw_string(num,sizeof(num));//ç»™è¾“å…¥çš„numåŠ å¼•å·ä½¿å…¶ä¸æ–‡ä»¶ä¸­çš„æ•°æ®æ ¼å¼ä¸€è‡´
 
     cJSON_ArrayForEach(i,course)
     {
@@ -621,7 +621,7 @@ int student_select_course()
             if(!strcmp(cJSON_Print(j->child),Course_select_system->name))
             {
                 select_count++;
-                if(select_count >= 3)//ÅĞ¶ÏÑ¡¿ÎÊıÊÇ·ñ´óÓÚÈı
+                if(select_count >= 3)//åˆ¤æ–­é€‰è¯¾æ•°æ˜¯å¦å¤§äºä¸‰
                 {
                     puts("You have selected enough courses. Permission denied.");
                     return 0;
@@ -636,7 +636,7 @@ int student_select_course()
         {
             if(strlen(course_times) == 1)
             {
-                if((course_times[1]&parse_time(cJSON_Print(cJSON_GetArrayItem(i,8)))) != 0)//ÅĞ¶Ï¿Î³ÌÊ±¼äÊÇ·ñ³åÍ»
+                if((course_times[1]&parse_time(cJSON_Print(cJSON_GetArrayItem(i,8)))) != 0)//åˆ¤æ–­è¯¾ç¨‹æ—¶é—´æ˜¯å¦å†²çª
                 {
                     puts("Conflict courses. Please retry.");
                     return 0;
@@ -650,12 +650,12 @@ int student_select_course()
                     return 0;
                 }
             }
-            if(parse_string(cJSON_Print(cJSON_GetArrayItem(i,10))) == cJSON_GetArraySize(cJSON_GetArrayItem(i,13)))//ÅĞ¶Ï¿Î³ÌÈËÊıÊÇ·ñÂúÔ±
+            if(parse_string(cJSON_Print(cJSON_GetArrayItem(i,10))) == cJSON_GetArraySize(cJSON_GetArrayItem(i,13)))//åˆ¤æ–­è¯¾ç¨‹äººæ•°æ˜¯å¦æ»¡å‘˜
             {
                 puts("The course is closed. Please retry.");
                 return 0;
             }
-            cJSON_AddItemToArray(cJSON_GetArrayItem(i,13),new_student);//Ìí¼Ó³É¹¦²¢Ôö¼ÓÒ»Î»Ñ§ÉúÃû¶î
+            cJSON_AddItemToArray(cJSON_GetArrayItem(i,13),new_student);//æ·»åŠ æˆåŠŸå¹¶å¢åŠ ä¸€ä½å­¦ç”Ÿåé¢
             puts("Success.");
             return 1;
         }
@@ -669,22 +669,22 @@ int delete_course_student()
     puts("Please enter the class number");
 
     char num[100];
-    memset(num,0,sizeof(num));//³õÊ¼»¯num
+    memset(num,0,sizeof(num));//åˆå§‹åŒ–num
     gets(num);
-    deal_raw_string(num,sizeof(num));//¸øÊäÈëµÄnum¼ÓÒıºÅÊ¹ÆäÓëÎÄ¼şÖĞµÄÊı¾İ¸ñÊ½Ò»ÖÂ
+    deal_raw_string(num,sizeof(num));//ç»™è¾“å…¥çš„numåŠ å¼•å·ä½¿å…¶ä¸æ–‡ä»¶ä¸­çš„æ•°æ®æ ¼å¼ä¸€è‡´
 
     cJSON *i;
-    cJSON_ArrayForEach(i,course)//´Ócourse.jsonÀïÌáÈ¡ĞÅÏ¢
+    cJSON_ArrayForEach(i,course)//ä»course.jsoné‡Œæå–ä¿¡æ¯
     {
-        if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num))//±È½ÏcourseÎÄ¼şÀïµÄnumberÓëÊäÈëµÄnum
+        if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num))//æ¯”è¾ƒcourseæ–‡ä»¶é‡Œçš„numberä¸è¾“å…¥çš„num
         {
             cJSON *j;
             int index = 0;
-            cJSON_ArrayForEach(j,cJSON_GetArrayItem(i,13))//±äÀúÑ¡¿ÎµÄÑ§ÉúÃûµ¥
+            cJSON_ArrayForEach(j,cJSON_GetArrayItem(i,13))//å˜å†é€‰è¯¾çš„å­¦ç”Ÿåå•
             {
-                if(!strcmp(cJSON_Print(j->child),Course_select_system->name))//²éÕÒ¸ÃÑ¡¿ÎÖĞÊÇ·ñ´æÔÚ×Ô¼ºµÄĞÅÏ¢
+                if(!strcmp(cJSON_Print(j->child),Course_select_system->name))//æŸ¥æ‰¾è¯¥é€‰è¯¾ä¸­æ˜¯å¦å­˜åœ¨è‡ªå·±çš„ä¿¡æ¯
                 {
-                    cJSON_DeleteItemFromArray(cJSON_GetArrayItem(i,13),index);//Ñ§ÉúÉ¾³ı¸ÃÑ¡¿Î
+                    cJSON_DeleteItemFromArray(cJSON_GetArrayItem(i,13),index);//å­¦ç”Ÿåˆ é™¤è¯¥é€‰è¯¾
                     puts("Success.");
                     return 1;
                 }
@@ -701,14 +701,14 @@ void query_result(char* name)
 {
     puts("Course Lists:");
     cJSON *i;
-    cJSON_ArrayForEach(i,course)//´Ócourse.jsonÀïÌáÈ¡ĞÅÏ¢
+    cJSON_ArrayForEach(i,course)//ä»course.jsoné‡Œæå–ä¿¡æ¯
     {
         cJSON *j;
-        cJSON_ArrayForEach(j,cJSON_GetArrayItem(i,13))//±äÀúÑ¡¿ÎµÄÑ§ÉúÃûµ¥
+        cJSON_ArrayForEach(j,cJSON_GetArrayItem(i,13))//å˜å†é€‰è¯¾çš„å­¦ç”Ÿåå•
         {
-            if(!strcmp(cJSON_Print(j->child),name))//²éÕÒ¸ÃÑ¡¿ÎÖĞÊÇ·ñ´æÔÚ×Ô¼ºµÄĞÅÏ¢
+            if(!strcmp(cJSON_Print(j->child),name))//æŸ¥æ‰¾è¯¥é€‰è¯¾ä¸­æ˜¯å¦å­˜åœ¨è‡ªå·±çš„ä¿¡æ¯
             {
-                printf("%s\t%s\n",cJSON_Print(cJSON_GetArrayItem(i,0)),cJSON_Print(cJSON_GetArrayItem(i,1)));//Êä³ö×Ô¼ºËùÓĞÒÑÑ¡¿Î³ÌĞÅÏ¢
+                printf("%s\t%s\n",cJSON_Print(cJSON_GetArrayItem(i,0)),cJSON_Print(cJSON_GetArrayItem(i,1)));//è¾“å‡ºè‡ªå·±æ‰€æœ‰å·²é€‰è¯¾ç¨‹ä¿¡æ¯
             }
         }
     }
@@ -760,26 +760,26 @@ void get_course_status()
 int search_course()
 {
     char name[100];
-    memset(name,0,sizeof(name));//³õÊ¼»¯±äÁ¿
+    memset(name,0,sizeof(name));//åˆå§‹åŒ–å˜é‡
     cJSON *i;
-    add_side();//´òĞÇº¯Êı
+    add_side();//æ‰“æ˜Ÿå‡½æ•°
     puts("Search way");
     puts("(1) Search by course.");
     puts("(2) Search by faculty.");
     add_side();
-    int opt = check_valid_input(1,2);//¹ıÂË·Ç·¨ÊäÈë
+    int opt = check_valid_input(1,2);//è¿‡æ»¤éæ³•è¾“å…¥
     if(opt == 1)
     {
         puts("Please enter course name.");
         gets(name);
-        deal_raw_string(name,sizeof(name));//¸øÊäÈëµÄname¼ÓÒıºÅÊ¹ÆäÓëÎÄ¼şÖĞµÄÊı¾İ¸ñÊ½Ò»ÖÂ
+        deal_raw_string(name,sizeof(name));//ç»™è¾“å…¥çš„nameåŠ å¼•å·ä½¿å…¶ä¸æ–‡ä»¶ä¸­çš„æ•°æ®æ ¼å¼ä¸€è‡´
         cJSON_ArrayForEach(i,course)
         {
             if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,1)),name))
             {
                 puts("Success");
                 cJSON *j;
-                cJSON_ArrayForEach(j,i)//±äÀúiµÄËùÓĞÔªËØ
+                cJSON_ArrayForEach(j,i)//å˜å†içš„æ‰€æœ‰å…ƒç´ 
                 {
                     if(strcmp(j->string, "students") != 0)
                     {
@@ -805,12 +805,12 @@ int search_course()
         add_side();
         int opt_1 = check_valid_input(1,2);
         if(opt_1 == 1)
-            print_by_limit(name,"faculty");//°´ÏŞÖÆÈËÊıÅÅĞò
+            print_by_limit(name,"faculty");//æŒ‰é™åˆ¶äººæ•°æ’åº
         else if(opt_1 == 2)
-            print_by_student_count(name,"faculty");//°´ÒÑÑ¡ÈËÊıÅÅĞò
+            print_by_student_count(name,"faculty");//æŒ‰å·²é€‰äººæ•°æ’åº
     }
 }
-int parse_string(char *string)//½«´øË«ÒıºÅµÄÕûÊı×Ö·û´®½âÎöÎªintÀàĞÍ ÀıÈç½«"123"×ª»»Îª123
+int parse_string(char *string)//å°†å¸¦åŒå¼•å·çš„æ•´æ•°å­—ç¬¦ä¸²è§£æä¸ºintç±»å‹ ä¾‹å¦‚å°†"123"è½¬æ¢ä¸º123
 {
     char new_string [100];
 
@@ -818,12 +818,12 @@ int parse_string(char *string)//½«´øË«ÒıºÅµÄÕûÊı×Ö·û´®½âÎöÎªintÀàĞÍ ÀıÈç½«"123"×
     {
         new_string[i] = string[i+1];
     }
-    //È¥³ıË«ÒıºÅ
+    //å»é™¤åŒå¼•å·
     return atoi(new_string);
-    //·µ»Ø´¦Àí½á¹ûµÄÕûĞÍÊıÖµ
+    //è¿”å›å¤„ç†ç»“æœçš„æ•´å‹æ•°å€¼
 }
 
-void deparse(char *string,char *new_string)//È¥³ıË«ÒıºÅ
+void deparse(char *string,char *new_string)//å»é™¤åŒå¼•å·
 {
     for(int i = 0; i < strlen(string) - 2; i++)
     {
