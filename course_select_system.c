@@ -60,19 +60,20 @@ void exit_system()
 }
 
 void deal_raw_string(char* raw, int len_raw)
+//将输入字符串加上双引号
 {
     char a[100];
     int len=strlen(a);
     memset(a, 0, len);
     //清空数组a
     a[0]=(char)34;
-    //给a首元素赋值”
+    //给a首元素赋值为双引号
     strcat(a,raw);
     //拼接数组a和数组raw
     memset(raw,0,len_raw);
     //清空数组raw
     raw[0]=(char)34;
-    //给a首元素赋值“
+    //给a首元素赋值为双引号
     strcat(a,raw);
     strcpy(raw,a);
 }
@@ -104,8 +105,8 @@ int login(char *password, char *num)
     deal_raw_string(password,sizeof(password));
     //给num和password加双引号
     cJSON *i=NULL;
-    //定义CJSON结构体i
-    cJSON_ArrayForEach(i,teacher)//循环所有属于teacher类型的i
+    //定义CJSON循环变量i
+    cJSON_ArrayForEach(i,teacher)//遍历teacher文件
     {
         //比较（i，4）与password，（i，0）与num是否相同
         if(strcmp(cJSON_Print(cJSON_GetArrayItem(i,4)),password) == 0&&strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num) == 0)
