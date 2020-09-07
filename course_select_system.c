@@ -105,7 +105,7 @@ int login(char *password, char *num)
     deal_raw_string(password,sizeof(password));
     //给num和password加双引号
     cJSON *i=NULL;
-    //定义CJSON循环变量i
+    //定义cJSON循环变量i
     cJSON_ArrayForEach(i,teacher)//遍历teacher文件
     {
         //比较（i，4）与password，（i，0）与num是否相同
