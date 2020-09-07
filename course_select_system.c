@@ -60,19 +60,25 @@ void exit_system()
 }
 
 void deal_raw_string(char* raw, int len_raw)
+//将输入字符串加上双引号
 {
     char a[100];
     int len=strlen(a);
     memset(a, 0, len);
+    //清空数组a
     a[0]=(char)34;
+    //给a首元素赋值为双引号
     strcat(a,raw);
+    //拼接数组a和数组raw
     memset(raw,0,len_raw);
+    //清空数组raw
     raw[0]=(char)34;
+    //给a首元素赋值为双引号
     strcat(a,raw);
     strcpy(raw,a);
 }
 
-int check_valid_input(int l, int r)
+int check_valid_input(int l, int r)//校验输入，如果输入不合法，重复获取直到合法为止
 {
     int opt = 0;
     while(1)
@@ -97,13 +103,16 @@ int login(char *password, char *num)
     scanf("%s%s",num,password);getchar();
     deal_raw_string(num,sizeof(num));
     deal_raw_string(password,sizeof(password));
-
+    //给num和password加双引号
     cJSON *i=NULL;
-    cJSON_ArrayForEach(i,teacher)
+    //定义CJSON循环变量i
+    cJSON_ArrayForEach(i,teacher)//遍历teacher文件
     {
+        //比较（i，4）与password，（i，0）与num是否相同
         if(strcmp(cJSON_Print(cJSON_GetArrayItem(i,4)),password) == 0&&strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num) == 0)
         {
             Course_select_system->identity = 1;
+            //将Course_select_system类型变量的identity赋值为1
             strcpy(Course_select_system->name,cJSON_Print(cJSON_GetArrayItem(i,2)));
             puts("Login Success. Your identity is teacher");
             return 1;
@@ -112,9 +121,11 @@ int login(char *password, char *num)
     i=NULL;
     cJSON_ArrayForEach(i,student)
     {
+        //比较（i，6）与password，（i，0）与num是否相同
         if(strcmp(cJSON_Print(cJSON_GetArrayItem(i,6)),password) == 0&&strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num) == 0)
         {
             Course_select_system->identity = 2;
+            //将Course_select_system类型变量的identity赋值为2
             strcpy(Course_select_system->name,cJSON_Print(cJSON_GetArrayItem(i,3)));
             puts("Login Success. Your identity is student");
             return 1;
@@ -807,7 +818,9 @@ int parse_string(char *string)
     {
         new_string[i] = string[i+1];
     }
+    //去除双引号
     return atoi(new_string);
+    //返回数值
 }
 
 void deparse(char *string,char *new_string)
@@ -816,6 +829,7 @@ void deparse(char *string,char *new_string)
     {
         new_string[i] = string[i+1];
     }
+    //去除双引号
 }
 
 
