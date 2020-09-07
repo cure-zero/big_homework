@@ -108,11 +108,11 @@ int login(char *password, char *num)
     //定义CJSON循环变量i
     cJSON_ArrayForEach(i,teacher)//遍历teacher文件
     {
-        //比较（i，4）与password，（i，0）与num是否相同
+        //比较输入的账号密码是否在teacher数据库中
         if(strcmp(cJSON_Print(cJSON_GetArrayItem(i,4)),password) == 0&&strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num) == 0)
         {
             Course_select_system->identity = 1;
-            //将Course_select_system类型变量的identity赋值为1
+            //将身份设置为老师
             strcpy(Course_select_system->name,cJSON_Print(cJSON_GetArrayItem(i,2)));
             puts("Login Success. Your identity is teacher");
             return 1;
@@ -121,11 +121,11 @@ int login(char *password, char *num)
     i=NULL;
     cJSON_ArrayForEach(i,student)
     {
-        //比较（i，6）与password，（i，0）与num是否相同
+        //比较输入的账号密码是否在teacher数据库中
         if(strcmp(cJSON_Print(cJSON_GetArrayItem(i,6)),password) == 0&&strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num) == 0)
         {
             Course_select_system->identity = 2;
-            //将Course_select_system类型变量的identity赋值为2
+            //将身份设置为学生
             strcpy(Course_select_system->name,cJSON_Print(cJSON_GetArrayItem(i,3)));
             puts("Login Success. Your identity is student");
             return 1;
@@ -810,7 +810,7 @@ int search_course()
             print_by_student_count(name,"faculty");
     }
 }
-int parse_string(char *string)
+int parse_string(char *string)//将带双引号的整数字符串解析为int类型 例如将"123"转换为123
 {
     char new_string [100];
 
@@ -820,16 +820,15 @@ int parse_string(char *string)
     }
     //去除双引号
     return atoi(new_string);
-    //返回数值
+    //返回处理结果的整型数值
 }
 
-void deparse(char *string,char *new_string)
+void deparse(char *string,char *new_string)//去除双引号
 {
     for(int i = 0; i < strlen(string) - 2; i++)
     {
         new_string[i] = string[i+1];
     }
-    //去除双引号
 }
 
 
