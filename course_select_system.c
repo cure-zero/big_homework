@@ -258,7 +258,7 @@ void menu()
     }
 }
 
-int add_course()
+int add_course()//增加课程
 {
     cJSON *new_course = cJSON_CreateObject();
     int course_time_int = 0;
@@ -278,7 +278,7 @@ int add_course()
     puts("Please input limit");gets(limit);
     puts("Please input brief introdution");gets(brief);
     puts("Please input textbook");gets(info);
-
+//输入课程属性
     cJSON_AddItemToObject(new_course, "num", cJSON_CreateString(num));
     cJSON_AddItemToObject(new_course, "name", cJSON_CreateString(name));
     cJSON_AddItemToObject(new_course, "credit", cJSON_CreateString(credit));
@@ -291,7 +291,7 @@ int add_course()
     cJSON_AddItemToObject(new_course, "limit", cJSON_CreateString(limit));
     cJSON_AddItemToObject(new_course, "brief", cJSON_CreateString(brief));
     cJSON_AddItemToObject(new_course, "info", cJSON_CreateString(info));
-
+//把以上属性增加到新的课程里
     deal_raw_string(num,sizeof(num));
     deal_raw_string(name,sizeof(name));
     deal_raw_string(credit,sizeof(credit));
@@ -304,7 +304,7 @@ int add_course()
     deal_raw_string(limit,sizeof(limit));
     deal_raw_string(brief,sizeof(brief));
     deal_raw_string(info,sizeof(info));
-
+//对以上数据进行字符串的格式化处理
     course_time_int=parse_time(course_time);
 
     cJSON *i = NULL;
@@ -343,7 +343,7 @@ int add_course()
 
 int parse_time(char* time_raw)
 {
-    if(!strcmp(time_raw,"\"8:00-8:50\""))
+    if(!strcmp(time_raw,"\"8:00-8:50\""))//比较上课时间是否和此时间段一致
         return 0b1000000000;
     if(!strcmp(time_raw,"\"8:00-9:50\""))
         return 0b1100000000;
@@ -388,7 +388,7 @@ int parse_time(char* time_raw)
     if(!strcmp(time_raw,"\"19:30-20:20\""))
         return 0b0000000001;
 }
-
+//根据上课时间分类，用二进制数代表课程
 int delete_course_teacher()
 {
     puts("Please enter the number of the course.");
