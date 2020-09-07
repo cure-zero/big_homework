@@ -307,10 +307,10 @@ int add_course()//增加课程
 //对以上数据进行字符串的格式化处理
     course_time_int=parse_time(course_time);
 
-    cJSON *i = NULL;
-    cJSON_ArrayForEach(i,course)
+    cJSON *i = NULL;//定义cJSON循环变量i
+    cJSON_ArrayForEach(i,course)//遍历course文件
     {
-        if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num))
+        if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num))//找到结构体里的第0项，转换为字符串格式，并比较两个字符串是否相等
         {
             puts("Course number already exists!");
             return 0;
@@ -388,7 +388,7 @@ int parse_time(char* time_raw)
     if(!strcmp(time_raw,"\"19:30-20:20\""))
         return 0b0000000001;
 }
-//根据上课时间分类，用二进制数代表课程
+//用不同的二进制数表示不同上课时间的课程
 int delete_course_teacher()
 {
     puts("Please enter the number of the course.");
@@ -756,14 +756,14 @@ int search_course()
             print_by_student_count(name,"faculty");
     }
 }
-int parse_string(char *string)
+int parse_string(char *string)//把指定字符串的双引号去掉并提取整型数据
 {
     char new_string [100];
     for(int i = 0; i < strlen(string) - 2; i++)
     {
         new_string[i] = string[i+1];
     }
-    return atoi(new_string);
+    return atoi(new_string);//把字符串传换成整型数
 }
 
 void deparse(char *string,char *new_string)
