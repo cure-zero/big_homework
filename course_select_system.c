@@ -430,27 +430,27 @@ int delete_course_teacher()
 {
     puts("Please enter the number of the course.");
     char num[100];
-    memset(num,0,sizeof(num));
+    memset(num,0,sizeof(num));//初始化值为零
     gets(num);
-    deal_raw_string(num,sizeof(num));
+    deal_raw_string(num,sizeof(num));//字符串的格式化处理
     cJSON *i = NULL;
     int index = 0;
-    cJSON_ArrayForEach(i,course)
+    cJSON_ArrayForEach(i,course)//遍历数组
     {
-        if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num))
+        if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num))//判断输入课程是否与当前课程一致
         {
-            if(strcmp(cJSON_Print(cJSON_GetArrayItem(i,5)),Course_select_system->name) != 0)
+            if(strcmp(cJSON_Print(cJSON_GetArrayItem(i,5)),Course_select_system->name) != 0)//判断当前课程是否为该教师开设
             {
                 puts("Not your class. Permission Denied.");
                 return 0;
             }
-            if(cJSON_GetArraySize(cJSON_GetArrayItem(i,13)) != 0)
+            if(cJSON_GetArraySize(cJSON_GetArrayItem(i,13)) != 0)//判断当前课程是否有学生选择
             {
                 puts("The course has already been selected by students. Permission Denied.");
                 return 0;
             }
             puts("Success.");
-            cJSON_DeleteItemFromArray(course,index);
+            cJSON_DeleteItemFromArray(course,index);//删除输入课程
             return 1;
         }
         index++;
@@ -462,25 +462,24 @@ int delete_course_teacher()
 int manage_info()
 {
     char target_string[100];
-    memset(target_string,0,sizeof(target_string));
+    memset(target_string,0,sizeof(target_string));//初始化值为零
     cJSON *i;
-    if(Course_select_system->identity == 1)
-    cJSON_ArrayForEach(i,teacher)
+    if(Course_select_system->identity == 1)//判断输入身份为教师
+    cJSON_ArrayForEach(i,teacher)//遍历数组
     {
-        if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,2)),Course_select_system->name))
-        {
+        if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,2)),Course_select_system->name))//判断输入教师的姓名是否与当前姓名一致
             invalid_flag_teacher:;
             add_side();
             puts("What do you want to edit?");
             puts("(1) Edit email address.");
             puts("(2) Edit password.");
             add_side();
-            int opt = check_valid_input(1,2);
+            int opt = check_valid_input(1,2);//校验输入，如果输入不合法，重复获取直到合法为止
             if(opt == 1)
             {
                 puts("Please enter new email address.");
                 scanf("%s",target_string);getchar();
-                cJSON_SetValuestring(cJSON_GetArrayItem(i,3),target_string);
+                cJSON_SetValuestring(cJSON_GetArrayItem(i,3),target_string);//待注释
                 puts("Success.");
                 return 1;
             }
@@ -494,10 +493,10 @@ int manage_info()
             }
         }
     }
-    else if(Course_select_system->identity == 2)
+    else if(Course_select_system->identity == 2)//判断输入身份为学生
     cJSON_ArrayForEach(i,student)
     {
-        if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,3)),Course_select_system->name))
+        if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,3)),Course_select_system->name))//判断输入学生的姓名是否与当前姓名一致
         {
             invalid_flag_student:;
             add_side();
@@ -506,7 +505,7 @@ int manage_info()
             puts("(2) Edit password.");
             puts("(3) Edit phone number.");
             add_side();
-            int opt = check_valid_input(1,3);
+            int opt = check_valid_input(1,3);//校验输入，如果输入不合法，重复获取直到合法为止
             if(opt == 1)
             {
                 puts("Please enter new address.");
@@ -540,14 +539,14 @@ int edit_course()
     puts("Please enter the number of the course.");
 
     char num[100];
-    memset(num,0,sizeof(num));
+    memset(num,0,sizeof(num));//初始化值为零
     gets(num);
-    deal_raw_string(num,sizeof(num));
+    deal_raw_string(num,sizeof(num));//字符串的格式化处理
 
     cJSON *i = NULL;
-    cJSON_ArrayForEach(i,course)
+    cJSON_ArrayForEach(i,course)//遍历数组
     {
-        if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num))
+        if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num))//判断输入课程号是否与当前课程号一致
         {
             back_flag:;
             add_side();
@@ -555,13 +554,13 @@ int edit_course()
             puts("(1) Edit textbook.");
             puts("(2) Edit info 3 to edit limit.");
             add_side();
-            int opt = check_valid_input(1,3);
-            if(strcmp(cJSON_Print(cJSON_GetArrayItem(i,5)),Course_select_system->name) != 0)
+            int opt = check_valid_input(1,3);//校验输入，如果输入不合法，重复获取直到合法为止
+            if(strcmp(cJSON_Print(cJSON_GetArrayItem(i,5)),Course_select_system->name) != 0)//判断当前课程是否为该教师开设
             {
                 puts("Not your class. Permission Denied.");
                 return 0;
             }
-            if(cJSON_GetArraySize(cJSON_GetArrayItem(i,13)) != 0 && opt != 3)
+            if(cJSON_GetArraySize(cJSON_GetArrayItem(i,13)) != 0 && opt != 3)//待注释
             {
                 puts("The course has already been selected by students. Permission Denied.");
                 return 0;
@@ -717,19 +716,19 @@ void get_course_status()
 {
     cJSON *i;
     char name[100];
-    memset(name,0,sizeof(name));
+    memset(name,0,sizeof(name));//初始化值为零
     add_side();
     puts("(1) Get the info of your courses.");
     puts("(2) Search courses of a student.");
     puts("(3) Search the students info of a course.");
     add_side();
-    int opt = check_valid_input(1,3);
+    int opt = check_valid_input(1,3);//校验输入，如果输入不合法，重复获取直到合法为止
     if(opt == 1)
     {
         puts("Course Lists:\n");
-        cJSON_ArrayForEach(i,course)
+        cJSON_ArrayForEach(i,course)//遍历数组
         {
-            if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,5)),Course_select_system->name))
+            if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,5)),Course_select_system->name))//待注释
             {
                 puts(cJSON_Print(i));
             }
@@ -739,17 +738,17 @@ void get_course_status()
     {
         puts("Please enter the name of the student.");
         gets(name);
-        deal_raw_string(name,sizeof(name));
-        query_result(name);
+        deal_raw_string(name,sizeof(name));//字符串的格式化处理
+        query_result(name);//待注释
     }
     else if(opt == 3)
     {
         puts("Please enter the name of the course.");
         gets(name);
-        deal_raw_string(name,sizeof(name));
-        cJSON_ArrayForEach(i,course)
+        deal_raw_string(name,sizeof(name));//字符串的格式化处理
+        cJSON_ArrayForEach(i,course)//遍历数组
         {
-            if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,1)),name))
+            if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,1)),name))//待注释
             {
                 puts("Student Lists:");
                 puts(cJSON_Print(cJSON_GetArrayItem(i,13)));
