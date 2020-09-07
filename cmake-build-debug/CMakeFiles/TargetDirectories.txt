@@ -1,3 +1,0 @@
-C:/Users/Cure_zero/CLionProjects/student_select_class_system/cmake-build-debug/CMakeFiles/student_select_class_system.dir
-C:/Users/Cure_zero/CLionProjects/student_select_class_system/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Cure_zero/CLionProjects/student_select_class_system/cmake-build-debug/CMakeFiles/rebuild_cache.dir

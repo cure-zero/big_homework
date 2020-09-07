@@ -60,19 +60,25 @@ void exit_system()
 }
 
 void deal_raw_string(char* raw, int len_raw)
+//将输入字符串加上双引号
 {
     char a[100];
     int len=strlen(a);
     memset(a, 0, len);
+    //清空数组a
     a[0]=(char)34;
+    //给a首元素赋值为双引号
     strcat(a,raw);
+    //拼接数组a和数组raw
     memset(raw,0,len_raw);
+    //清空数组raw
     raw[0]=(char)34;
+    //给a首元素赋值为双引号
     strcat(a,raw);
     strcpy(raw,a);
 }
 
-int check_valid_input(int l, int r)
+int check_valid_input(int l, int r)//校验输入，如果输入不合法，重复获取直到合法为止
 {
     int opt = 0;
     while(1)
@@ -97,13 +103,16 @@ int login(char *password, char *num)
     scanf("%s%s",num,password);getchar();
     deal_raw_string(num,sizeof(num));
     deal_raw_string(password,sizeof(password));
-
+    //给num和password加双引号
     cJSON *i=NULL;
-    cJSON_ArrayForEach(i,teacher)
+    //定义cJSON循环变量i
+    cJSON_ArrayForEach(i,teacher)//遍历teacher文件
     {
+        //比较输入的账号密码是否在teacher数据库中
         if(strcmp(cJSON_Print(cJSON_GetArrayItem(i,4)),password) == 0&&strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num) == 0)
         {
             Course_select_system->identity = 1;
+            //将身份设置为老师
             strcpy(Course_select_system->name,cJSON_Print(cJSON_GetArrayItem(i,2)));
             puts("Login Success. Your identity is teacher");
             return 1;
@@ -112,8 +121,11 @@ int login(char *password, char *num)
     i=NULL;
     cJSON_ArrayForEach(i,student)
     {
+        //比较输入的账号密码是否在teacher数据库中
         if(strcmp(cJSON_Print(cJSON_GetArrayItem(i,6)),password) == 0&&strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num) == 0)
         {
+            Course_select_system->identity = 2;
+            //将身份设置为学生
             strcpy(Course_select_system->name,cJSON_Print(cJSON_GetArrayItem(i,3)));
             puts("Login Success. Your identity is student");
             return 1;
@@ -126,6 +138,15 @@ int login(char *password, char *num)
     }
 }
 
+void add_side()
+{
+    int i;
+    for (i = 1; i < 50; i++)
+    {
+        printf("*");
+    }
+    printf("\n");
+}
 void menu()
 {
     if(fp_course == NULL || fp_teacher == NULL || fp_student == NULL || course->type == cJSON_Invalid || teacher->type == cJSON_Invalid || student->type == cJSON_Invalid )
@@ -141,15 +162,24 @@ void menu()
         if(login(password,num))break;
     }
 
-    int cmd = 0 ;
+    int cmd = 0;
     int opt = 0;
 
     while(1)
     {
         if(Course_select_system->identity == 1)
         {
-            puts("Press 1 to get info of courses, 2 to delete your courses, 3 to get statistics of your courses, 4 to query courses, 5 to add courses, 6 to edit courses, 7 to edit your profile.");
-            puts("If you want to exit, press 0");
+            add_side();
+            puts("Teacher's functions");
+            puts("(1) Get info of courses.");
+            puts("(2) Delete your courses.");
+            puts("(3) Get statistics of your courses.");
+            puts("(4) Query courses.");
+            puts("(5) Add courses.");
+            puts("(6) Edit courses.");
+            puts("(7) Edit your profile.");
+            puts("If you want to exit, press 0.");
+            add_side();
             scanf("%d", &cmd);getchar();
             if(cmd == 0) { exit_system(); break;}
             else if(cmd == 1)get_course_status();
@@ -157,7 +187,7 @@ void menu()
             {
                 while(1)
                 {
-                    if(!delete_course_teacher())break;
+                    if(delete_course_teacher())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
                     scanf("%d",&opt);
                     if(opt != 1)break;
@@ -168,7 +198,7 @@ void menu()
             {
                 while(1)
                 {
-                    if(!search_course())break;
+                    if(search_course())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
                     scanf("%d",&opt);
                     if(opt != 1)break;
@@ -178,7 +208,7 @@ void menu()
             {
                 while(1)
                 {
-                    if(!add_course())break;
+                    if(add_course())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
                     scanf("%d",&opt);
                     if(opt != 1)break;
@@ -188,7 +218,7 @@ void menu()
             {
                 while(1)
                 {
-                    if(!edit_course())break;
+                    if(edit_course())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
                     scanf("%d",&opt);
                     if(opt != 1)break;
@@ -198,7 +228,7 @@ void menu()
             {
                 while(1)
                 {
-                    if(!manage_info())break;
+                    if(manage_info())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
                     scanf("%d",&opt);
                     if(opt != 1)break;
@@ -208,15 +238,22 @@ void menu()
         }
         if(Course_select_system->identity == 2)
         {
-            puts("Press 1 to select courses, 2 to search courses, 3 to query results, 4 to delete courses, and 5 to edit profile.");
-            puts("If you want to exit, press 0");
+            add_side();
+            puts("Student's functions");
+            puts( "(1) Select courses.");
+            puts( "(2) Search courses. ");
+            puts( "(3) Query results. ");
+            puts( "(4) Delete courses.");
+            puts( "(5) Edit profile.");
+            puts("If you want to exit, press 0.");
+            add_side();
             scanf("%d", &cmd);getchar();
             if(cmd == 0) { exit_system(); break;}
             else if(cmd == 1)
             {
                 while(1)
                 {
-                    if(!student_select_course())break;
+                    if(student_select_course())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
                     scanf("%d",&opt);
                     if(opt != 1)break;
@@ -226,7 +263,7 @@ void menu()
             {
                 while(1)
                 {
-                    if(!search_course())break;
+                    if(search_course())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
                     scanf("%d",&opt);
                     if(opt != 1)break;
@@ -237,7 +274,7 @@ void menu()
             {
                 while(1)
                 {
-                    if(!delete_course_student())break;
+                    if(delete_course_student())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
                     scanf("%d",&opt);
                     if(opt != 1)break;
@@ -247,7 +284,7 @@ void menu()
             {
                 while(1)
                 {
-                    if(!manage_info())break;
+                    if(manage_info())break;
                     puts("To retry please press 1, or press other if you want to back to menu");
                     scanf("%d",&opt);
                     if(opt != 1)break;
@@ -258,7 +295,7 @@ void menu()
     }
 }
 
-int add_course()//���ӿγ�
+int add_course()//增加课程
 {
     cJSON *new_course = cJSON_CreateObject();
     int course_time_int = 0;
@@ -278,7 +315,7 @@ int add_course()//���ӿγ�
     puts("Please input limit");gets(limit);
     puts("Please input brief introdution");gets(brief);
     puts("Please input textbook");gets(info);
-//����γ�����
+//输入课程属性
     cJSON_AddItemToObject(new_course, "num", cJSON_CreateString(num));
     cJSON_AddItemToObject(new_course, "name", cJSON_CreateString(name));
     cJSON_AddItemToObject(new_course, "credit", cJSON_CreateString(credit));
@@ -291,7 +328,7 @@ int add_course()//���ӿγ�
     cJSON_AddItemToObject(new_course, "limit", cJSON_CreateString(limit));
     cJSON_AddItemToObject(new_course, "brief", cJSON_CreateString(brief));
     cJSON_AddItemToObject(new_course, "info", cJSON_CreateString(info));
-//�������������ӵ��µĿγ���
+//把以上属性增加到新的课程里
     deal_raw_string(num,sizeof(num));
     deal_raw_string(name,sizeof(name));
     deal_raw_string(credit,sizeof(credit));
@@ -304,13 +341,13 @@ int add_course()//���ӿγ�
     deal_raw_string(limit,sizeof(limit));
     deal_raw_string(brief,sizeof(brief));
     deal_raw_string(info,sizeof(info));
-//���������ݽ����ַ����ĸ�ʽ������
+//对以上数据进行字符串的格式化处理
     course_time_int=parse_time(course_time);
 
-    cJSON *i = NULL;//����cJSONѭ������i
-    cJSON_ArrayForEach(i,course)//����course�ļ�
+    cJSON *i = NULL;//定义cJSON循环变量i
+    cJSON_ArrayForEach(i,course)//遍历course文件
     {
-        if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num))//�ҵ��ṹ����ĵ�0�ת��Ϊ�ַ�����ʽ�����Ƚ������ַ����Ƿ����
+        if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num))//找到结构体里的第0项，转换为字符串格式，并比较两个字符串是否相等
         {
             puts("Course number already exists!");
             return 0;
@@ -343,7 +380,7 @@ int add_course()//���ӿγ�
 
 int parse_time(char* time_raw)
 {
-    if(!strcmp(time_raw,"\"8:00-8:50\""))//�Ƚ��Ͽ�ʱ���Ƿ�ʹ�ʱ���һ��
+    if(!strcmp(time_raw,"\"8:00-8:50\""))//比较上课时间是否和此时间段一致
         return 0b1000000000;
     if(!strcmp(time_raw,"\"8:00-9:50\""))
         return 0b1100000000;
@@ -388,7 +425,7 @@ int parse_time(char* time_raw)
     if(!strcmp(time_raw,"\"19:30-20:20\""))
         return 0b0000000001;
 }
-//�ò�ͬ�Ķ���������ʾ��ͬ�Ͽ�ʱ��Ŀγ�
+//用不同的二进制数表示不同上课时间的课程
 int delete_course_teacher()
 {
     puts("Please enter the number of the course.");
@@ -433,8 +470,11 @@ int manage_info()
         if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,2)),Course_select_system->name))
         {
             invalid_flag_teacher:;
+            add_side();
             puts("What do you want to edit?");
-            puts("press 1 to edit email address and 2 to edit password.");
+            puts("(1) Edit email address.");
+            puts("(2) Edit password.");
+            add_side();
             int opt = check_valid_input(1,2);
             if(opt == 1)
             {
@@ -460,8 +500,12 @@ int manage_info()
         if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,3)),Course_select_system->name))
         {
             invalid_flag_student:;
+            add_side();
             puts("What do you want to edit?");
-            puts("press 1 to edit email address, 2 to edit password and 3 to edit phone number.");
+            puts("(1) Edit email address.");
+            puts("(2) Edit password.");
+            puts("(3) Edit phone number.");
+            add_side();
             int opt = check_valid_input(1,3);
             if(opt == 1)
             {
@@ -506,8 +550,11 @@ int edit_course()
         if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num))
         {
             back_flag:;
+            add_side();
             puts("What do you want to edit?");
-            puts("press 1 to edit textbook, 2 to edit info 3 to edit limit");
+            puts("(1) Edit textbook.");
+            puts("(2) Edit info 3 to edit limit.");
+            add_side();
             int opt = check_valid_input(1,3);
             if(strcmp(cJSON_Print(cJSON_GetArrayItem(i,5)),Course_select_system->name) != 0)
             {
@@ -554,17 +601,17 @@ int student_select_course()
     int course_times[100];
     char parsed_name[100];
 
-    memset(num,0,sizeof(num));
+    memset(num,0,sizeof(num));//初始化变量
     memset(course_times,0,sizeof(course_times));
     memset(parsed_name,0,sizeof(parsed_name));
-    deparse(Course_select_system->name,parsed_name);
-    gets(num);
-    deal_raw_string(num,sizeof(num));
-
+    deparse(Course_select_system->name,parsed_name);//将输出的name去引号后附值给变量parsed_name
+  
     cJSON *new_student = cJSON_CreateObject();
-    cJSON_AddStringToObject(new_student,"name",parsed_name);
+    cJSON_AddStringToObject(new_student,"name",parsed_name);//在new_student对象中添加name属性
 
     puts("Please enter the class number");
+    gets(num);
+    deal_raw_string(num,sizeof(num));//给输入的num加引号使其与文件中的数据格式一致
 
     cJSON_ArrayForEach(i,course)
     {
@@ -574,7 +621,7 @@ int student_select_course()
             if(!strcmp(cJSON_Print(j->child),Course_select_system->name))
             {
                 select_count++;
-                if(select_count >= 3)
+                if(select_count >= 3)//判断选课数是否大于三
                 {
                     puts("You have selected enough courses. Permission denied.");
                     return 0;
@@ -589,7 +636,7 @@ int student_select_course()
         {
             if(strlen(course_times) == 1)
             {
-                if((course_times[1]&parse_time(cJSON_Print(cJSON_GetArrayItem(i,8)))) != 0)
+                if((course_times[1]&parse_time(cJSON_Print(cJSON_GetArrayItem(i,8)))) != 0)//判断课程时间是否冲突
                 {
                     puts("Conflict courses. Please retry.");
                     return 0;
@@ -603,12 +650,12 @@ int student_select_course()
                     return 0;
                 }
             }
-            if(parse_string(cJSON_Print(cJSON_GetArrayItem(i,10))) == cJSON_GetArraySize(cJSON_GetArrayItem(i,13)))
+            if(parse_string(cJSON_Print(cJSON_GetArrayItem(i,10))) == cJSON_GetArraySize(cJSON_GetArrayItem(i,13)))//判断课程人数是否满员
             {
                 puts("The course is closed. Please retry.");
                 return 0;
             }
-            cJSON_AddItemToArray(cJSON_GetArrayItem(i,13),new_student);
+            cJSON_AddItemToArray(cJSON_GetArrayItem(i,13),new_student);//添加成功并增加一位学生名额
             puts("Success.");
             return 1;
         }
@@ -622,22 +669,22 @@ int delete_course_student()
     puts("Please enter the class number");
 
     char num[100];
-    memset(num,0,sizeof(num));
+    memset(num,0,sizeof(num));//初始化num
     gets(num);
-    deal_raw_string(num,sizeof(num));
+    deal_raw_string(num,sizeof(num));//给输入的num加引号使其与文件中的数据格式一致
 
     cJSON *i;
-    cJSON_ArrayForEach(i,course)
+    cJSON_ArrayForEach(i,course)//从course.json里提取信息
     {
-        if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num))
+        if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num))//比较course文件里的number与输入的num
         {
             cJSON *j;
             int index = 0;
-            cJSON_ArrayForEach(j,cJSON_GetArrayItem(i,13))
+            cJSON_ArrayForEach(j,cJSON_GetArrayItem(i,13))//变历选课的学生名单
             {
-                if(!strcmp(cJSON_Print(j->child),Course_select_system->name))
+                if(!strcmp(cJSON_Print(j->child),Course_select_system->name))//查找该选课中是否存在自己的信息
                 {
-                    cJSON_DeleteItemFromArray(cJSON_GetArrayItem(i,13),index);
+                    cJSON_DeleteItemFromArray(cJSON_GetArrayItem(i,13),index);//学生删除该选课
                     puts("Success.");
                     return 1;
                 }
@@ -654,14 +701,14 @@ void query_result(char* name)
 {
     puts("Course Lists:");
     cJSON *i;
-    cJSON_ArrayForEach(i,course)
+    cJSON_ArrayForEach(i,course)//从course.json里提取信息
     {
         cJSON *j;
-        cJSON_ArrayForEach(j,cJSON_GetArrayItem(i,13))
+        cJSON_ArrayForEach(j,cJSON_GetArrayItem(i,13))//变历选课的学生名单
         {
-            if(!strcmp(cJSON_Print(j->child),name))
+            if(!strcmp(cJSON_Print(j->child),name))//查找该选课中是否存在自己的信息
             {
-                printf("%s\t%s\n",cJSON_Print(cJSON_GetArrayItem(i,0)),cJSON_Print(cJSON_GetArrayItem(i,1)));
+                printf("%s\t%s\n",cJSON_Print(cJSON_GetArrayItem(i,0)),cJSON_Print(cJSON_GetArrayItem(i,1)));//输出自己所有已选课程信息
             }
         }
     }
@@ -671,9 +718,11 @@ void get_course_status()
     cJSON *i;
     char name[100];
     memset(name,0,sizeof(name));
-
-    puts("Press 1 to get the info of your courses, 2 to search courses of a student, and 3 to search the students info of a course.");
-
+    add_side();
+    puts("(1) Get the info of your courses.");
+    puts("(2) Search courses of a student.");
+    puts("(3) Search the students info of a course.");
+    add_side();
     int opt = check_valid_input(1,3);
     if(opt == 1)
     {
@@ -711,23 +760,26 @@ void get_course_status()
 int search_course()
 {
     char name[100];
-    memset(name,0,sizeof(name));
+    memset(name,0,sizeof(name));//初始化变量
     cJSON *i;
-
-    puts("Press 1 to search by course, or press 2 to search by faculty.");
-    int opt = check_valid_input(1,2);
+    add_side();//打星函数
+    puts("Search way");
+    puts("(1) Search by course.");
+    puts("(2) Search by faculty.");
+    add_side();
+    int opt = check_valid_input(1,2);//过滤非法输入
     if(opt == 1)
     {
         puts("Please enter course name.");
         gets(name);
-        deal_raw_string(name,sizeof(name));
+        deal_raw_string(name,sizeof(name));//给输入的name加引号使其与文件中的数据格式一致
         cJSON_ArrayForEach(i,course)
         {
             if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,1)),name))
             {
                 puts("Success");
                 cJSON *j;
-                cJSON_ArrayForEach(j,i)
+                cJSON_ArrayForEach(j,i)//变历i的所有元素
                 {
                     if(strcmp(j->string, "students") != 0)
                     {
@@ -746,27 +798,32 @@ int search_course()
         puts("Please enter faculty name.");
         gets(name);
         deal_raw_string(name,sizeof(name));
-
-        puts("Press 1 to sort by limit or press 2 to sort by student counts");
-
+        add_side();
+        puts("Sort way");
+        puts("(1) Sort by limit.");
+        puts("(2) Sort by student counts");
+        add_side();
         int opt_1 = check_valid_input(1,2);
         if(opt_1 == 1)
-            print_by_limit(name,"faculty");
+            print_by_limit(name,"faculty");//按限制人数排序
         else if(opt_1 == 2)
-            print_by_student_count(name,"faculty");
+            print_by_student_count(name,"faculty");//按已选人数排序
     }
 }
-int parse_string(char *string)//��ָ���ַ�����˫����ȥ������ȡ��������
+int parse_string(char *string)//将带双引号的整数字符串解析为int类型 例如将"123"转换为123
 {
     char new_string [100];
+
     for(int i = 0; i < strlen(string) - 2; i++)
     {
         new_string[i] = string[i+1];
     }
-    return atoi(new_string);//���ַ���������������
+    //去除双引号
+    return atoi(new_string);
+    //返回处理结果的整型数值
 }
 
-void deparse(char *string,char *new_string)
+void deparse(char *string,char *new_string)//去除双引号
 {
     for(int i = 0; i < strlen(string) - 2; i++)
     {
