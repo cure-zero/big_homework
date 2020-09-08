@@ -35,4 +35,6 @@ void print_by_student_count(char *name,char *key);
 int cmp();
 void deparse(char *string,char *new_string);
 int check_valid_input(int l, int r);
+int check_valid_email(char *email, int len);
+int check_valid_phone_num(char *num);
 #endif //STUDENT_SELECT_CLASS_SYSTEM_COURSE_SELECT_SYSTEM_H
