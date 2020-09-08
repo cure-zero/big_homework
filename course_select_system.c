@@ -693,6 +693,15 @@ int student_select_course()
                 puts("The course is closed. Please retry.");
                 return 0;
             }
+            cJSON *j;
+            cJSON_ArrayForEach(j,cJSON_GetArrayItem(i,13))
+            {
+                if(!strcmp(cJSON_Print(j->child),Course_select_system->name))
+                {
+                    puts("You have already select this course. Please retry.");
+                    return 0;
+                }
+            }
             cJSON_AddItemToArray(cJSON_GetArrayItem(i,13),new_student);//添加成功并增加一位学生名额
             puts("Success.");
             return 1;
@@ -728,7 +737,7 @@ int delete_course_student()
                 }
                 index++;
             }
-            puts("This is not your course. Please retry.");
+            puts("You have not selected this course. Please retry.");
             return 0;
         }
     }
