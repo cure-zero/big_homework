@@ -728,7 +728,7 @@ int delete_course_student()
                 }
                 index++;
             }
-            puts("Thie is not your course. Please retry.");
+            puts("This is not your course. Please retry.");
             return 0;
         }
     }
@@ -820,7 +820,7 @@ int search_course()
             {
                 puts("Success");
                 cJSON *j;
-                cJSON_ArrayForEach(j,i)//变历i的所有元素
+                cJSON_ArrayForEach(j,i)//遍历i的所有元素
                 {
                     if(strcmp(j->string, "students") != 0)
                     {
@@ -849,6 +849,7 @@ int search_course()
             print_by_limit(name,"faculty");//按限制人数排序
         else if(opt_1 == 2)
             print_by_student_count(name,"faculty");//按已选人数排序
+        return 1;
     }
 }
 int parse_string(char *string)//将带双引号的整数字符串解析为int类型 例如将"123"转换为123
@@ -936,53 +937,70 @@ int cmp(const void *a, const void *b)//快排比较函数
     return ((Course*)a)->student_count - ((Course*)b)->student_count;
 }
 
-void print_by_limit(char *name, char *key)
+void print_by_limit(char *name, char *key)//根据选课上限排序
 {
+    int cnt = 0;//课程计数
     qsort(courses,courses_size,sizeof(Course),cmp);//快排
-    for(int i = courses_size - 1; i >= 0; i--)//输出
+    for(int i = courses_size - 1; i >= 0; i--)//遍历排序后的课程
     {
         cJSON *j;
         cJSON_ArrayForEach(j,course)
         {
-            if(!strcmp(cJSON_Print(cJSON_GetArrayItem(j,1)),courses[i].name))
+            if(!strcmp(cJSON_Print(cJSON_GetArrayItem(j,1)),courses[i].name))//在数据库中寻找当前课程
             {
                 cJSON *z;
-                cJSON_ArrayForEach(z,j)
+                cJSON_ArrayForEach(z,j)//遍历当前课程的元素
                 {
-                    if(!strcmp(z->string,key))
+                    if(!strcmp(z->string,key))//寻找筛选条件的元素
                     {
-                        if(!strcmp(cJSON_Print(z),name))
-                            printf("%s\t%d\n",courses[i].name,courses[i].limit);
+                        if(!strcmp(cJSON_Print(z),name))//如果满足筛选条件
+                        {
+                            cnt++;
+                            printf("%s\t%d\n", courses[i].name, courses[i].limit);
+                        }
                     }
                 }
             }
         }
 
     }
+    if(!cnt)
+    {
+        puts("Course not found. Please check and retry.");
+    }
 }
 
-void print_by_student_count(char *name, char *key)
+void print_by_student_count(char *name, char *key)//根据已选人数排序
 {
+    int cnt = 0;//课程计数
     qsort(courses,courses_size,sizeof(Course),cmp);
-    for(int i = 0; i < courses_size; i++)
+    for(int i = 0; i < courses_size; i++)//遍历所有课程
     {
         cJSON *j;
-        cJSON_ArrayForEach(j,course)
+        cJSON_ArrayForEach(j,course)//遍历排序后的课程
         {
-            if(!strcmp(cJSON_Print(cJSON_GetArrayItem(j,1)),courses[i].name))
+            if(!strcmp(cJSON_Print(cJSON_GetArrayItem(j,1)),courses[i].name))//在数据库中寻找当前课程
             {
+
                 cJSON *z;
-                cJSON_ArrayForEach(z,j)
+                cJSON_ArrayForEach(z,j)//遍历当前课程的元素
                 {
-                    if(!strcmp(z->string,key))
+                    if(!strcmp(z->string,key))//验证是否满足筛选条件
                     {
-                        if(!strcmp(cJSON_Print(z),name))
-                            printf("%s\t%d\n",courses[i].name,courses[i].student_count);
+                        if(!strcmp(cJSON_Print(z),name))//输出除name外的信息
+                        {
+                            cnt++;
+                            printf("%s\t%d\n", courses[i].name, courses[i].student_count);
+                        }
                     }
                 }
             }
         }
 
+    }
+    if(!cnt)
+    {
+        puts("Course not found. Please check and retry.");
     }
 }
 
