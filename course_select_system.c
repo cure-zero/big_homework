@@ -797,13 +797,19 @@ void get_course_status()
         puts("Please enter the name of the course.");
         gets(name);
         deal_raw_string(name,sizeof(name));
+        int flag = 0;
         cJSON_ArrayForEach(i,course)
         {
             if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,1)),name))
             {
+                flag = 1;
                 puts("Student Lists:");
                 puts(cJSON_Print(cJSON_GetArrayItem(i,13)));
             }
+        }
+        if(!flag)
+        {
+            puts("Course not found. Please retry.");
         }
     }
 }
