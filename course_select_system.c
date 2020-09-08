@@ -804,7 +804,7 @@ int search_course()
     memset(name,0,sizeof(name));//初始化变量
     cJSON *i;
     add_side();//打星函数
-    puts("Search way");
+    puts("Search methods:");
     puts("(1) Search by course.");
     puts("(2) Search by faculty.");
     add_side();
@@ -840,7 +840,7 @@ int search_course()
         gets(name);
         deal_raw_string(name,sizeof(name));
         add_side();
-        puts("Sort way");
+        puts("Sort method:");
         puts("(1) Sort by limit.");
         puts("(2) Sort by student counts");
         add_side();
