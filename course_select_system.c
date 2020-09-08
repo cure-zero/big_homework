@@ -502,14 +502,8 @@ int manage_info()
             }
             else if(opt == 2)
             {
-                while (1)//获取合法电话号码输入
-                {
-                    puts("Please enter new password.");
-                    gets(target_string);
-                    if(check_valid_phone_num(target_string))break;
-                    puts("Invalid input. Please retry.");
-                    puts("Telephone number should be 11 characters and begin with 1.");
-                }
+                puts("Please input new password.");
+                gets(target_string);
                 cJSON_SetValuestring(cJSON_GetArrayItem(i,4),target_string);//将数据库中手机替换
                 puts("Success.");
                 return 1;
@@ -555,7 +549,7 @@ int manage_info()
             {
                 while (1)//获取合法电话号码输入
                 {
-                    puts("Please enter new password.");
+                    puts("Please enter new phone number.");
                     gets(target_string);
                     if(check_valid_phone_num(target_string))break;
                     puts("Invalid input. Please retry.");
@@ -586,7 +580,8 @@ int edit_course()
             add_side();
             puts("What do you want to edit?");
             puts("(1) Edit textbook.");
-            puts("(2) Edit info 3 to edit limit.");
+            puts("(2) Edit info.");
+            puts("(3) Edit limit.");
             add_side();
 
             int opt = check_valid_input(1,3);
@@ -1020,7 +1015,7 @@ int check_valid_email(char *email, int len)
 
 int check_valid_phone_num(char *num)
 {
-    if(atoi(num) > 20000000000 || atoi(num) < 10000000000)
+    if(atoll(num) > 20000000000 || atoll(num) < 10000000000)
     {
         return 0;
     }
