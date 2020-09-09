@@ -936,8 +936,10 @@ void get_stat()
 }
 void init_struct()
 {
+    free(courses);
     courses = (Course*)calloc(cJSON_GetArraySize(course),sizeof(Course));//初始化
     cJSON *i;
+    courses_size = 0;
 
     cJSON_ArrayForEach(i,course)
     {
@@ -948,16 +950,22 @@ void init_struct()
     }
 }
 
-int cmp(const void *a, const void *b)//快排比较函数
+int cmp_student_count(const void *a, const void *b)//快排比较函数
 {
     return ((Course*)a)->student_count - ((Course*)b)->student_count;
 }
 
+int cmp_limit(const void *a, const void *b)
+{
+    return ((Course*)a)->limit - ((Course*)b)->limit;
+}
+
 void print_by_limit(char *name, char *key)//根据选课上限排序
 {
+    init_struct();
     int cnt = 0;//课程计数
-    qsort(courses,courses_size,sizeof(Course),cmp);//快排
-    for(int i = courses_size - 1; i >= 0; i--)//遍历排序后的课程
+    qsort(courses,courses_size,sizeof(Course),cmp_limit);//快排
+    for(int i = 0; i < courses_size; i++)//遍历排序后的课程
     {
         cJSON *j;
         cJSON_ArrayForEach(j,course)
@@ -988,9 +996,10 @@ void print_by_limit(char *name, char *key)//根据选课上限排序
 
 void print_by_student_count(char *name, char *key)//根据已选人数排序
 {
+    init_struct();
     int cnt = 0;//课程计数
-    qsort(courses,courses_size,sizeof(Course),cmp);
-    for(int i = 0; i < courses_size; i++)//遍历所有课程
+    qsort(courses,courses_size,sizeof(Course),cmp_student_count);
+    for(int i = courses_size - 1; i >= 0; i--)//遍历所有课程
     {
         cJSON *j;
         cJSON_ArrayForEach(j,course)//遍历排序后的课程
