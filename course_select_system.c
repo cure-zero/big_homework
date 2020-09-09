@@ -673,7 +673,7 @@ int student_select_course()
     {
         if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,0)),num))
         {
-            if(strlen(course_times) == 1)
+            if(select_count == 1)
             {
                 if((course_times[1]&parse_time(cJSON_Print(cJSON_GetArrayItem(i,8)))) != 0)//判断课程时间是否冲突
                 {
@@ -681,7 +681,7 @@ int student_select_course()
                     return 0;
                 }
             }
-            if(strlen(course_times) == 2)
+            if(select_count == 2)
             {
                 if((course_times[1]&parse_time(cJSON_Print(cJSON_GetArrayItem(i,8)))) != 0 || (course_times[2]&parse_time(cJSON_Print(cJSON_GetArrayItem(i,8)))) != 0)
                 {
