@@ -156,11 +156,12 @@ void menu()//菜单
         if(login(password,num))break;
     }
 
-    int cmd = 0;
+    int cmd = -1;
     int opt = 0;
 
     while(1)
     {
+        cmd = -1;
         if(Course_select_system->identity == 1)
         {
             add_side();
