@@ -505,7 +505,7 @@ int manage_info()
             {
                 puts("Please input new password.");
                 gets(target_string);
-                cJSON_SetValuestring(cJSON_GetArrayItem(i,4),target_string);//将数据库中手机替换
+                cJSON_SetValuestring(cJSON_GetArrayItem(i,4),target_string);//将数据库中密码替换
                 puts("Success.");
                 return 1;
             }
@@ -516,7 +516,6 @@ int manage_info()
     {
         if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,3)),Course_select_system->name))
         {
-            invalid_flag_student:;
             add_side();
             puts("What do you want to edit?");
             puts("(1) Edit email address.");
@@ -748,6 +747,7 @@ int delete_course_student()
 void query_result(char* name)
 {
     puts("Course Lists:");
+    int cnt = 0;//选课数目计数器
     cJSON *i;
     cJSON_ArrayForEach(i,course)
     {
@@ -756,10 +756,15 @@ void query_result(char* name)
         {
             if(!strcmp(cJSON_Print(j->child),name))//查找该选课中是否存在自己的信息
             {
+                cnt++;
                 printf("%s\t%s\n",cJSON_Print(cJSON_GetArrayItem(i,0)),cJSON_Print(cJSON_GetArrayItem(i,1)));
                 //输出自己所有已选课程信息
             }
         }
+    }
+    if(!cnt)
+    {
+        puts("No course has been selected yet.");
     }
 }
 void get_course_status()
@@ -775,6 +780,8 @@ void get_course_status()
     add_side();
 
     int opt = check_valid_input(1,3);
+    int cnt = 0;//计数器
+
     if(opt == 1)
     {
         puts("Course Lists:\n");
@@ -783,7 +790,12 @@ void get_course_status()
             if(!strcmp(cJSON_Print(cJSON_GetArrayItem(i,5)),Course_select_system->name))
             {
                 puts(cJSON_Print(i));
+                cnt++;
             }
+        }
+        if(!cnt)
+        {
+            puts("You don't have a course.");
         }
     }
     else if(opt == 2)

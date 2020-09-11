@@ -41,10 +41,16 @@
 		"course_end_time":	"2020-2021twelfth semester of the academic year",
 		"course_time":	"8:00-9:50",
 		"course_place":	"1-405",
-		"limit":	"80",
+		"limit":	"3",
 		"brief_introduction":	"Let the students master the information representation and basic operation in the computer system, understand the working principle and basic logical structure of the computer hardware system (CPU, storage system, i/o system and peripheral equipment) , learn how to design a simple CPU with MIPS32 architecture and simulate it with hardware description language.",
 		"textbook_info":	"<Principles of Computer Composition (5th Edition)>",
-		"students":	[],
+		"students":	[{
+				"name":	"aisi"
+			}, {
+				"name":	"aili"
+			}, {
+				"name":	"LuoZiqiang"
+			}],
 		"faculty":	"International faculty"
 	}, {
 		"number":	"000004",
@@ -318,4 +324,5 @@
 		"textbook_info":	"none",
 		"students":	[],
 		"faculty":	"International faculty"
+	}]nal faculty"
 	}]
