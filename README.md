@@ -12,6 +12,6 @@
 ## 使用并测试
   测试用例见 测试用例.xlsx
 ## 效果图
-  ![image](https://github.com/cure-zero/course-selecting-system/blob/master/example.png)
+![image](https://github.com/cure-zero/course-selecting-system/blob/master/example.png)
 ## 鸣谢
   [DaveGamble/cJson](https://github.com/DaveGamble/cJSON)
